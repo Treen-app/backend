@@ -1,7 +1,7 @@
-package app.jasople.Config.code.status;
+package com.app.treen.common.response.code.status;
 
-import app.jasople.Config.code.BaseErrorCode;
-import app.jasople.Config.code.ErrorReasonDTO;
+import com.app.treen.common.response.code.BaseErrorCode;
+import com.app.treen.common.response.code.ErrorReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -16,9 +16,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
-
     // 멤버 관려 에러
-
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER4001", "사용자가 없습니다."),
     USER_NOT_ACTIVE(HttpStatus.BAD_REQUEST, "USER4002", "사용자는 활성 상태가 아닙니다."),
     USER_NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "USER4003", "닉네임이 이미 존재합니다."),
@@ -45,10 +43,8 @@ public enum ErrorStatus implements BaseErrorCode {
     // 제재 관련 에러
     PROHIBIT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROHIBIT4001", "해당하는 유저의 제재가 없습니다."),
 
-
     // 인증 관련 에러
     USER_NOT_AUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH4001", "휴대폰 인증이 필요합니다."),
-
 
     // 전공 관련 에러
     MAJORS_NOR_FOUND(HttpStatus.NOT_FOUND, "MAJORS4001", "해당하는 전공이 없습니다."),
@@ -60,7 +56,6 @@ public enum ErrorStatus implements BaseErrorCode {
     JWT_EMPTY(HttpStatus.UNAUTHORIZED, "JWT4003", "JWT 토큰을 넣어주세요."),
     JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT4004", "만료된 토큰입니다."),
     JWT_REFRESHTOKEN_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "JWT4005", "RefreshToken이 일치하지 않습니다."),
-
 
     // 게시판 관련 에러
     BOARDLIKE_DUPLICATED(HttpStatus.BAD_REQUEST, "BOARD4001", "이미 좋아요 되었습니다."),
