@@ -1,4 +1,4 @@
-package app.jasople.Config.code;
+package com.app.treen.common.response.code;
 
 public interface BaseCode {
 
