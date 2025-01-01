@@ -1,7 +1,7 @@
-package app.jasople.Config.code.status;
+package com.app.treen.common.response.code.status;
 
-import app.jasople.Config.code.BaseCode;
-import app.jasople.Config.code.ReasonDTO;
+import com.app.treen.common.response.code.BaseCode;
+import com.app.treen.common.response.code.ReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -1,2 +1,5 @@
-package com.app.treen.products.entity;public enum Gender {
+package com.app.treen.products.entity;
+
+public enum Gender {
+    M,F,UNISEX
 }
