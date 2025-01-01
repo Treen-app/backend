@@ -1,2 +1,4 @@
-package com.app.treen.products.controller;public class ProductController {
+package com.app.treen.products.controller;
+
+public class ProductController {
 }

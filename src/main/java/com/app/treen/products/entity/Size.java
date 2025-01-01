@@ -1,5 +1,5 @@
 package com.app.treen.products.entity;
 
-public enum SizeType {
+public enum Size {
     X,L,M,S,XS,F
 }
