@@ -1,6 +1,7 @@
 package com.app.treen.chatting.entity;
 
 import com.app.treen.BaseTimeEntity;
+import com.app.treen.products.entity.TransProduct;
 import com.app.treen.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,10 @@ public class ChatRoom extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id")
     private User buyer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trans_product_id")
+    private TransProduct transProduct;
 
     @Builder
     public ChatRoom(String title, boolean isReserved) {

@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 @Builder
 public class ChatRoomResponseDto {
 
-    private Long id;
+    private Long chatRoomId;
     private String title;
     private LocalDateTime createdAt;
     private boolean isReserved;
 
     public static ChatRoomResponseDto from(ChatRoom chatRoom) {
         return ChatRoomResponseDto.builder()
-                .id(chatRoom.getId())
+                .chatRoomId(chatRoom.getId())
                 .title(chatRoom.getTitle())
                 .createdAt(chatRoom.getCreatedAt())
                 .build();
