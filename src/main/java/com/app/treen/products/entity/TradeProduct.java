@@ -65,13 +65,5 @@ public class TradeProduct extends BaseTimeEntity {
     @Column(name = "liked_count", nullable = false)
     private Long likedCount = 0L;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tradeWishCategories",
-            joinColumns = @JoinColumn(name = "trade_product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private Set<Category> categories = new HashSet<>();
-
 
 }
