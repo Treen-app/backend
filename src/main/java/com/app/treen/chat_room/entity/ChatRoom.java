@@ -1,4 +1,4 @@
-package com.app.treen.chatting.entity;
+package com.app.treen.chat_room.entity;
 
 import com.app.treen.BaseTimeEntity;
 import com.app.treen.products.entity.TransProduct;
@@ -8,9 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.annotation.processing.Generated;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -41,5 +38,13 @@ public class ChatRoom extends BaseTimeEntity {
     public ChatRoom(String title, boolean isReserved) {
         this.title = title;
         this.isReserved = isReserved;
+    }
+
+    public User getOtherMember(Long memberId) {
+        if (buyer.getId().equals(memberId)) {
+            return buyer;
+        }
+
+        return seller;
     }
 }

@@ -1,6 +1,6 @@
-package com.app.treen.chatting.dto.response;
+package com.app.treen.chat_room.dto.response;
 
-import com.app.treen.chatting.document.ChatMessage;
+import com.app.treen.chat_room.document.ChatMessage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
