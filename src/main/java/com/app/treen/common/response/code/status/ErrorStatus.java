@@ -133,6 +133,10 @@ public enum ErrorStatus implements BaseErrorCode {
     NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "CHATROOM4001", "채팅방을 찾지 못했습니다.");
 
 
+
+    // 상품 에러
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT4001", "상품을 찾을 수 없습니다."),
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001", "카테고리를 찾을 수 없습니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
