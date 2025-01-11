@@ -79,15 +79,15 @@ public class ChatRoomController {
         return response.collectList().map(ApiResponse::onSuccess);
     }
 
-    // 메시지 송신 및 수신
-    @MessageMapping("/message")
-    public Mono<ResponseEntity<Void>> receiveMessage(@RequestBody MessageRequestDto chat) {
-        return chatRoomService.saveChatMessage(chat).doOnNext(message -> {
-            // 메시지를 해당 채팅방 구독자들에게 전송
-            template.convertAndSend("/sub/chatroom/" + chat.getRoomId(),
-                    MessageResponseDto.of(message));
-
-        }).thenReturn(ResponseEntity.ok().build());
-    }
+//    // 메시지 송신 및 수신
+//    @MessageMapping("/message")
+//    public Mono<ResponseEntity<Void>> receiveMessage(@RequestBody MessageRequestDto chat) {
+//        return chatRoomService.saveChatMessage(chat).doOnNext(message -> {
+//            // 메시지를 해당 채팅방 구독자들에게 전송
+//            template.convertAndSend("/sub/chatroom/" + chat.getRoomId(),
+//                    MessageResponseDto.of(message));
+//
+//        }).thenReturn(ResponseEntity.ok().build());
+//    }
 
 }

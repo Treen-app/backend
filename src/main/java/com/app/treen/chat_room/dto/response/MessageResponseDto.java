@@ -1,11 +1,12 @@
 package com.app.treen.chat_room.dto.response;
 
-import com.app.treen.chat_room.document.ChatMessage;
+import com.app.treen.message.document.Message;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -17,7 +18,7 @@ public class MessageResponseDto {
     private Long roomId;
     private String content;
     private Long writerId;
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     /**
      * ChatMessage 객체를 ChatMessageResponseDto로 변환하는 정적 메서드
@@ -25,13 +26,13 @@ public class MessageResponseDto {
      * @param chatMessage ChatMessage 객체
      * @return ChatMessageResponseDto 객체
      */
-    public static MessageResponseDto of(ChatMessage chatMessage) {
+    public static MessageResponseDto of(Message chatMessage) {
         return MessageResponseDto.builder()
                 .id(chatMessage.getId().toHexString()) // ObjectId를 String으로 변환
                 .roomId(chatMessage.getRoomId())
                 .content(chatMessage.getContent())
                 .writerId(chatMessage.getWriterId())
-                .createdDate(chatMessage.getCreatedDate())
+                .createdDate(chatMessage.getCreatedAt())
                 .build();
     }
 }

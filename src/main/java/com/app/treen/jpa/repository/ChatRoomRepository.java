@@ -1,4 +1,4 @@
-package com.app.treen.chat_room.repository;
+package com.app.treen.jpa.repository;
 
 import com.app.treen.chat_room.entity.ChatRoom;
 import org.springframework.data.jpa.repository.EntityGraph;
