@@ -25,8 +25,9 @@ public class User {
 
     // 공통 컬럼
     private String userName;
-    private String email;
+    private String loginId;
     private String password;
+    private String nickname;
     private String phone;
     private int gender; // 0은 남자, 1은 여자
     private LocalDateTime birthDate;
