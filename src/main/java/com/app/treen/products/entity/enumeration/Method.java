@@ -1,4 +1,4 @@
-package com.app.treen.products.entity;
+package com.app.treen.products.entity.enumeration;
 
 public enum Method {
     DELIVERY, DIRECT, ALL

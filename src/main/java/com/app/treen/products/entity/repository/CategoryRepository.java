@@ -1,5 +1,6 @@
-package com.app.treen.products.entity;
+package com.app.treen.products.entity.repository;
 
+import com.app.treen.products.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category,Long> {

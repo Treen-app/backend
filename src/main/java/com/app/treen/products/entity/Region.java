@@ -1,4 +1,4 @@
-package com.app.treen.region.entity;
+package com.app.treen.products.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,6 @@ public class Region {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "region_id")
     private Long id;
-
 
     @Column(name = "region_name")
     private String name;
