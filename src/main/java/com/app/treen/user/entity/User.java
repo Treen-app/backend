@@ -36,6 +36,8 @@ public class User {
     private String size;
     private String status; // ACTIVE, DELETED
 
+    private String profileImgUrl;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
