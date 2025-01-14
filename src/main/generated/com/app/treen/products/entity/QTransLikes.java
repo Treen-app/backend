@@ -26,7 +26,7 @@ public class QTransLikes extends EntityPathBase<TransLikes> {
 
     public final QTransProduct transProduct;
 
-    public final com.app.treen.user.entity.QUser user;
+    public final com.app.treen.auth.entity.QUser user;
 
     public QTransLikes(String variable) {
         this(TransLikes.class, forVariable(variable), INITS);
@@ -47,7 +47,7 @@ public class QTransLikes extends EntityPathBase<TransLikes> {
     public QTransLikes(Class<? extends TransLikes> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.transProduct = inits.isInitialized("transProduct") ? new QTransProduct(forProperty("transProduct"), inits.get("transProduct")) : null;
-        this.user = inits.isInitialized("user") ? new com.app.treen.user.entity.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.app.treen.auth.entity.QUser(forProperty("user")) : null;
     }
 
 }

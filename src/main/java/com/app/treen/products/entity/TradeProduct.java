@@ -3,7 +3,7 @@ package com.app.treen.products.entity;
 import com.app.treen.BaseTimeEntity;
 import com.app.treen.products.dto.request.TradeProductUpdateDto;
 import com.app.treen.products.entity.enumeration.*;
-import com.app.treen.user.entity.User;
+import com.app.treen.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

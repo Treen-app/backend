@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -17,7 +17,7 @@ public class MessageResponseDto {
     private Long roomId;
     private String content;
     private Long writerId;
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     /**
      * ChatMessage 객체를 ChatMessageResponseDto로 변환하는 정적 메서드

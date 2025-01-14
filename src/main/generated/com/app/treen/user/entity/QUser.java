@@ -1,4 +1,4 @@
-package com.app.treen.user.entity;
+package com.app.treen.auth.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 

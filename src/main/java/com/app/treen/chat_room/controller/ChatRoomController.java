@@ -1,3 +1,4 @@
+/*
 package com.app.treen.chat_room.controller;
 
 import com.app.treen.chat_room.dto.request.ChatRoomRequestDto;
@@ -91,3 +92,4 @@ public class ChatRoomController {
     }
 
 }
+*/

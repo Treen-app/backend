@@ -1,6 +1,6 @@
 package com.app.treen.common.jwt.service.dto;
 
-import com.app.treen.user.entity.User;
+import com.app.treen.auth.entity.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

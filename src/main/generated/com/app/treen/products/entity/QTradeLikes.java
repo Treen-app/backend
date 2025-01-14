@@ -26,7 +26,7 @@ public class QTradeLikes extends EntityPathBase<TradeLikes> {
 
     public final QTradeProduct tradeProduct;
 
-    public final com.app.treen.user.entity.QUser user;
+    public final com.app.treen.auth.entity.QUser user;
 
     public QTradeLikes(String variable) {
         this(TradeLikes.class, forVariable(variable), INITS);
@@ -47,7 +47,7 @@ public class QTradeLikes extends EntityPathBase<TradeLikes> {
     public QTradeLikes(Class<? extends TradeLikes> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.tradeProduct = inits.isInitialized("tradeProduct") ? new QTradeProduct(forProperty("tradeProduct"), inits.get("tradeProduct")) : null;
-        this.user = inits.isInitialized("user") ? new com.app.treen.user.entity.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.app.treen.auth.entity.QUser(forProperty("user")) : null;
     }
 
 }

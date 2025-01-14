@@ -1,3 +1,4 @@
+/*
 package com.app.treen.chat_room.service;
 
 import com.app.treen.chat_room.document.ChatMessage;
@@ -10,8 +11,8 @@ import com.app.treen.chat_room.entity.ChatRoom;
 import com.app.treen.chat_room.repository.ChatMessageRepository;
 import com.app.treen.chat_room.repository.ChatRoomRepository;
 import com.app.treen.products.entity.TransProductRepository;
-import com.app.treen.user.entity.User;
-import com.app.treen.user.repository.UserRepository;
+import com.app.treen.auth.entity.User;
+import com.app.treen.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -132,3 +133,4 @@ public class ChatRoomService {
 //
 //    }
 }
+*/

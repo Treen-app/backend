@@ -12,6 +12,10 @@ spring:
     url: jdbc:h2:tcp://localhost/~/test  # 인메모리 H2 DB 사용 (테스트용)
     username: sa      # 기본 사용자명
     password:
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
   jpa:
     hibernate.ddl-auto: update
     show-sql: true
@@ -19,7 +23,8 @@ spring:
       hibernate:
         format_sql: true
     database-platform: org.hibernate.dialect.H2Dialect  # H2Dialect 설정
-#    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+#jwt:
 cloud:
   aws:
     s3:
@@ -30,3 +35,10 @@ cloud:
     region:
       static: ${AWS_REGION:ap-northeast-2}
       auto: false
+
+# CoolSMS 인증
+coolsms:
+  api:
+    key: ${COOLSMS_API_KEY}
+    secret: ${COOLSMS_API_SECRET}
+    number: ${COOLSMS_PHONE_NUMBER}

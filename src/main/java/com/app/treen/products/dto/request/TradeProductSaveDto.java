@@ -2,7 +2,7 @@ package com.app.treen.products.dto.request;
 
 import com.app.treen.products.entity.*;
 import com.app.treen.products.entity.enumeration.*;
-import com.app.treen.user.entity.User;
+import com.app.treen.auth.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

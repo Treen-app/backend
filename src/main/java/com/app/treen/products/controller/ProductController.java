@@ -1,3 +1,4 @@
+/*
 package com.app.treen.products.controller;
 
 import com.app.treen.common.response.ApiResponse;
@@ -14,7 +15,7 @@ import com.app.treen.products.dto.response.TransProductResponseDto;
 import com.app.treen.products.dto.response.TransResponseListDto;
 import com.app.treen.products.entity.enumeration.TradeType;
 import com.app.treen.products.service.ProductService;
-import com.app.treen.user.entity.User;
+import com.app.treen.auth.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -153,3 +154,4 @@ public class ProductController {
 
 
 }
+*/

@@ -46,7 +46,6 @@ public class ChatMessage {
             isRead = true;
         }
     }
-
     public void read(Long writerId) {
         boolean isMyMessage = writerId.equals(writerId);
 

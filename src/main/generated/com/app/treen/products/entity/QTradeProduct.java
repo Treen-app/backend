@@ -41,6 +41,9 @@ public class QTradeProduct extends EntityPathBase<TradeProduct> {
 
     public final EnumPath<com.app.treen.products.entity.enumeration.Method> method = createEnum("method", com.app.treen.products.entity.enumeration.Method.class);
 
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
+
     public final StringPath name = createString("name");
 
     public final EnumPath<com.app.treen.products.entity.enumeration.Size> size = createEnum("size", com.app.treen.products.entity.enumeration.Size.class);
@@ -53,7 +56,7 @@ public class QTradeProduct extends EntityPathBase<TradeProduct> {
 
     public final StringPath usedTerm = createString("usedTerm");
 
-    public final com.app.treen.user.entity.QUser user;
+    public final com.app.treen.auth.entity.QUser user;
 
     public final NumberPath<Long> viewCount = createNumber("viewCount", Long.class);
 
@@ -82,7 +85,7 @@ public class QTradeProduct extends EntityPathBase<TradeProduct> {
     public QTradeProduct(Class<? extends TradeProduct> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new QCategory(forProperty("category")) : null;
-        this.user = inits.isInitialized("user") ? new com.app.treen.user.entity.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.app.treen.auth.entity.QUser(forProperty("user")) : null;
     }
 
 }

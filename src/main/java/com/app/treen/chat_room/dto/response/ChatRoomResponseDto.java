@@ -1,11 +1,9 @@
 package com.app.treen.chat_room.dto.response;
 
 import com.app.treen.chat_room.document.ChatMessage;
-import com.app.treen.chat_room.entity.ChatRoom;
-import com.app.treen.user.entity.User;
+import com.app.treen.auth.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.aspectj.bridge.Message;
 
 import java.time.LocalDateTime;
 

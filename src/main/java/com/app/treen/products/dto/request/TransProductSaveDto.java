@@ -5,7 +5,7 @@ import com.app.treen.products.entity.enumeration.Gender;
 import com.app.treen.products.entity.enumeration.Method;
 import com.app.treen.products.entity.enumeration.Size;
 import com.app.treen.products.entity.enumeration.UsedRank;
-import com.app.treen.user.entity.User;
+import com.app.treen.auth.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -16,6 +16,9 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
+    // 인증번호 관련 에러
+    AUTH_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "AUTH4002", "인증 시간이 초과되었습니다."),
+    AUTH_CODE_NOT_MATCH(HttpStatus.BAD_REQUEST, "AUTH4003", "인증번호가 일치하지 않습니다."),
     // 멤버 관려 에러
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER4001", "사용자가 없습니다."),
     USER_NOT_ACTIVE(HttpStatus.BAD_REQUEST, "USER4002", "사용자는 활성 상태가 아닙니다."),
@@ -32,9 +35,12 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_PHONE_IS_YOURS(HttpStatus.BAD_REQUEST, "USER4013", "본인이 사용중인 휴대폰번호입니다."),
     USER_PHONE_IS_USED(HttpStatus.BAD_REQUEST, "USER4014", "이미 사용중인 휴대폰번호입니다. 관리자에게 문의하세요"),
     USER_IS_SUSPENSION(HttpStatus.BAD_REQUEST, "USER4015", "정지된 계정입니다."),
-    USER_IS_ALREADY_REGISTERED_KAKAO(HttpStatus.IM_USED, "USER4016", "이미 카카오계쩡으로 가입된 전화번호입니다. 카카오로 로그인해주세요."),
-    USER_IS_INTEGRATED_KAKAO(HttpStatus.ACCEPTED, "USER4017", "사용자의 계정이 카카오계정과 통합되었습니다. YESOL 계정 혹은 카카오로 로그인해주세요."),
-
+    USER_IS_ALREADY_REGISTERED_KAKAO(HttpStatus.IM_USED, "USER4016", "이미 카카오계정으로 가입된 전화번호입니다. 카카오로 로그인해주세요."),
+    USER_IS_INTEGRATED_KAKAO(HttpStatus.ACCEPTED, "USER4017", "사용자의 계정이 카카오계정과 통합되었습니다. TREEN 계정 혹은 카카오로 로그인해주세요."),
+    DATE_TYPE_IS_WRONG(HttpStatus.BAD_REQUEST, "USER4018", "잘못된 생년월일 형식입니다. yyyy-MM-dd 형식이어야 합니다."),
+    USER_NICKNAME_INVALID(HttpStatus.BAD_REQUEST, "USER4019", "닉네임은 한글, 숫자, 영어만 가능하며 1~10자까지 입력 가능합니다."),
+    USER_ID_INVALID(HttpStatus.BAD_REQUEST, "USER4020", "ID는 소문자와 숫자만 가능하며 5~12자까지 입력 가능합니다."),
+    USER_PASSWORD_INVALID(HttpStatus.BAD_REQUEST, "USER4021", "비밀번호는 대문자와 특수문자를 포함하여 8~15자 사이로 입력해야 합니다."),
 
     // 관리자 관련 에러
     NOT_ADMIN(HttpStatus.UNAUTHORIZED, "ADMIN4001", "관리자의 권한이 없습니다."),
@@ -148,8 +154,6 @@ public enum ErrorStatus implements BaseErrorCode {
                 .isSuccess(false)
                 .build();
     }
-
-
 
     @Override
     public ErrorReasonDTO getReasonHttpStatus() {

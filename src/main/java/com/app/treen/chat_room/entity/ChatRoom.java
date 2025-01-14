@@ -2,7 +2,7 @@ package com.app.treen.chat_room.entity;
 
 import com.app.treen.BaseTimeEntity;
 import com.app.treen.products.entity.TransProduct;
-import com.app.treen.user.entity.User;
+import com.app.treen.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

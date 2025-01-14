@@ -14,6 +14,10 @@ public enum SuccessStatus implements BaseCode {
     _OK(HttpStatus.OK, "COMMON200", "성공입니다."),
 
     // 멤버 관련 응답
+    SMS_SENT_SUCCESS(HttpStatus.OK, "SMS200", "문자 메시지 전송 성공."),
+    SMS_VERIFIED_SUCCESS(HttpStatus.OK, "VERIFY200", "문자 인증 성공."),
+    REGISTRATION_SUCCESS(HttpStatus.OK, "REGISTER200", "회원가입 성공."),
+    LOGIN_SUCCESS(HttpStatus.OK, "LOGIN200", "로그인 성공."),
 
     // ~~~ 관련 응답
     PIN_LIKE(HttpStatus.OK, "LIKE200", "좋아요 등록에 성공하였습니다."),

@@ -1,3 +1,4 @@
+/*
 package com.app.treen.products.service;
 
 import com.app.treen.common.config.S3Uploader;
@@ -15,7 +16,7 @@ import com.app.treen.products.dto.response.TransResponseListDto;
 import com.app.treen.products.entity.*;
 import com.app.treen.products.entity.enumeration.TradeType;
 import com.app.treen.products.entity.repository.*;
-import com.app.treen.user.entity.User;
+import com.app.treen.auth.entity.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -374,9 +375,6 @@ public class ProductService {
             return false;
         }
     }
-
-
-
-
 }
 
+*/

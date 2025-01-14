@@ -2,7 +2,7 @@ package com.app.treen.products.dto.response;
 
 import com.app.treen.products.entity.*;
 import com.app.treen.products.entity.enumeration.*;
-import com.app.treen.user.entity.User;
+import com.app.treen.auth.entity.User;
 import lombok.Getter;
 
 import java.time.Duration;
