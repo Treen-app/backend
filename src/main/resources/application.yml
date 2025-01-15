@@ -1,0 +1,43 @@
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: ${DB_URL:jdbc:mysql://localhost:3306/treen}
+#    username: ${DB_USERNAME:root}
+#    password: ${DB_PASSWORD:password}
+spring:
+  config:
+    import: optional:file:.env[.properties]  # .env 파일을 직접 로드
+  datasource:
+    url: jdbc:mysql://${MYSQL_ENDPOINT}:3306/${MYSQL_DBNAME}?useSSL=false&serverTimezone=UTC
+    username: ${MYSQL_USER_NAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_S3_BUCKET:treen-bucket}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ${AWS_REGION:ap-northeast-2}
+      auto: false
+
+# CoolSMS 인증
+coolsms:
+  api:
+    key: ${COOLSMS_API_KEY}
+    secret: ${COOLSMS_API_SECRET}
+    number: ${COOLSMS_PHONE_NUMBER}
+
+jwt:
+  header: ${JWT_HEADER}
+  secret: ${JWT_SECRET}
+  token-validity-in-seconds: ${JWT_SECONDS}
