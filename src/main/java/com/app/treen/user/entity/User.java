@@ -35,6 +35,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status; // ACTIVE, DELETED, DEACTIVATED
 
+    @Setter
     @Column(name = "profile_img_url")
     private String profileImgUrl;
 

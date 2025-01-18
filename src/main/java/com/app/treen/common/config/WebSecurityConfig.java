@@ -57,6 +57,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // 인증 없이 접근 가능한 경로
                         .requestMatchers(
+                                "/api/**",
                                 "/swagger-ui/**", // Swagger UI
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
