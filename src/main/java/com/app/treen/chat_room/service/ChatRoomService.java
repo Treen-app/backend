@@ -50,6 +50,7 @@ public class ChatRoomService {
                         .orElseThrow())
                 .transProduct(transProductRepository.findById(productId)
                         .orElseThrow())
+                    //.isReserved()
                 .build();
 
         return chatRoomRepository.save(chatRoom).getId();
@@ -61,11 +62,11 @@ public class ChatRoomService {
         User member = userRepository.findById(loginMemberId)
                 .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
         return chatRooms.stream().map(chatRoom -> ChatRoomResponseDto.builder()
-                .chatRoomId(chatRoom.getId())
+                        .chatRoomId(chatRoom.getId())
                         .unreadCount(getUnreadCount(chatRoom, member))
                         //.otherMember(getOtherMemberDto(chatRoom.getOtherMember(loginMemberId)))
-                .lastMessage(getLastMessageDto(chatRoom))
-                .build())
+                        .lastMessage(getLastMessageDto(chatRoom))
+                        .isReserved().build())
                 .collect(Collectors.toList());
     }
 

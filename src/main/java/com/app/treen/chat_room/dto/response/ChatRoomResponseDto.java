@@ -29,7 +29,7 @@ public class ChatRoomResponseDto {
         public static MemberDto of(User member, String image) {
             return MemberDto.builder()
                     .id(member.getId())
-                    .name(member.getNickname())
+                    .name(member.getUserName())
                     .image(image)
                     .build();
         }

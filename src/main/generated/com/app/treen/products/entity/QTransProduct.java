@@ -42,7 +42,11 @@ public class QTransProduct extends EntityPathBase<TransProduct> {
     public final EnumPath<com.app.treen.products.entity.enumeration.Method> method = createEnum("method", com.app.treen.products.entity.enumeration.Method.class);
 
     //inherited
+<<<<<<< HEAD
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
+=======
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+>>>>>>> chatting
 
     public final StringPath name = createString("name");
 
