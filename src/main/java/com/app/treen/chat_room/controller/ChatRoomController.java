@@ -91,3 +91,54 @@
 //    }
 //
 //}
+
+    // 채팅방 목록 조회
+    @GetMapping("/auth/chat-list")
+    public ApiResponse<ChatRoomsResponse> getChatRooms(@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        ChatRoomsResponse chatRoomsResponse = ChatRoomsResponse.builder()
+                .chatRooms(chatRoomService.getChatRooms(userDetails.getMember().getId()))
+                .build();
+
+        return ApiResponse.onSuccess(chatRoomsResponse);
+    }
+
+    // 채팅방 조회
+    @GetMapping("auth/{chatRoomId}")
+    public Mono<ApiResponse<ChatRoomDetailResponse>> getChatRoomDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                 @PathVariable Long chatRoomId) {
+
+        return chatRoomService.getChatRoomDetail(userDetails.getMember().getId(), chatRoomId)
+                .map(ApiResponse::onSuccess);
+    }
+
+    // 채팅방 생성
+    @PostMapping("auth/create")
+    public ApiResponse<ChatRoomCreateResponse> createChatRoom(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                              @Valid @RequestBody ChatRoomRequestDto dto) {
+        Long chatRoomId = chatRoomService.saveChatRoom(userDetails.getMember().getId(),
+                dto.getSellerId(), dto.getProductId());
+        return ApiResponse.onSuccess(ChatRoomCreateResponse.builder()
+                .chatRoomId(chatRoomId)
+                .build());
+    }
+
+    // 이전 채팅 메시지들 조회
+    @GetMapping("/find/chat/list/{id}")
+    public Mono<ApiResponse<List<MessageResponseDto>>> findMessages(@PathVariable("id") Long id) {
+        Flux<MessageResponseDto> response = chatRoomService.findChatMessages(id);
+        return response.collectList().map(ApiResponse::onSuccess);
+    }
+
+//    // 메시지 송신 및 수신
+//    @MessageMapping("/message")
+//    public Mono<ResponseEntity<Void>> receiveMessage(@RequestBody MessageRequestDto chat) {
+//        return chatRoomService.saveChatMessage(chat).doOnNext(message -> {
+//            // 메시지를 해당 채팅방 구독자들에게 전송
+//            template.convertAndSend("/sub/chatroom/" + chat.getRoomId(),
+//                    MessageResponseDto.of(message));
+//
+//        }).thenReturn(ResponseEntity.ok().build());
+//    }
+
+}

@@ -34,7 +34,7 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
     public final BooleanPath isReserved = createBoolean("isReserved");
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
     public final com.app.treen.user.entity.QUser seller;
 

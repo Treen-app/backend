@@ -1,6 +1,6 @@
 package com.app.treen.chat_room.dto.request;
 
-import com.app.treen.chat_room.document.ChatMessage;
+import com.app.treen.message.document.Message;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class MessageRequestDto {
     private Long writerId;
     //private Date createdDate;
 
-    public static MessageRequestDto of(ChatMessage message) {
+    public static MessageRequestDto of(Message message) {
         return MessageRequestDto.builder()
                 .id(message.getId().toHexString())
                 .roomId(message.getRoomId())
