@@ -5,10 +5,7 @@ import com.app.treen.products.dto.request.TradeProductUpdateDto;
 import com.app.treen.products.entity.enumeration.*;
 import com.app.treen.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
+@Setter // 직우기
 @Table(name = "trade_products")
 public class TradeProduct extends BaseTimeEntity {
     @Id

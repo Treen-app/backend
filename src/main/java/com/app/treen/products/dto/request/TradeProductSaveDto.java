@@ -5,14 +5,15 @@ import com.app.treen.products.entity.enumeration.*;
 import com.app.treen.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Builder
 @Setter
+@NoArgsConstructor
 public class TradeProductSaveDto {
 
     private String name;
@@ -21,7 +22,6 @@ public class TradeProductSaveDto {
     private String detail;
     private UsedRank usedRank;
     private Method method;
-    private Long point;
     private Gender gender;
     private List<String> imageUrls;
     private String wishColor;

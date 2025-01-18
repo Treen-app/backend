@@ -1,6 +1,6 @@
 package com.app.treen.chat_room.dto.response;
 
-import com.app.treen.chat_room.document.ChatMessage;
+import com.app.treen.message.document.Message;
 import com.app.treen.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
@@ -27,7 +27,7 @@ public class ChatRoomDetailResponse {
         public static MemberDto from(User user) {
             return MemberDto.builder()
                     .id(user.getId())
-                    .name(user.getNickname())
+                    .name(user.getUserName())
                     .build();
         }
     }
@@ -42,7 +42,7 @@ public class ChatRoomDetailResponse {
         @JsonFormat(pattern = "yyyy-MM-dd-HH-mm-ss")
         private LocalDateTime sendDate;
 
-        public static MessageDto from(ChatMessage message) {
+        public static MessageDto from(Message message) {
             return MessageDto.builder()
                     .senderId(message.getWriterId())
                     .type(message.getType())

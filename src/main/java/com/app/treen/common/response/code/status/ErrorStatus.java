@@ -32,7 +32,7 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_PHONE_IS_YOURS(HttpStatus.BAD_REQUEST, "USER4013", "본인이 사용중인 휴대폰번호입니다."),
     USER_PHONE_IS_USED(HttpStatus.BAD_REQUEST, "USER4014", "이미 사용중인 휴대폰번호입니다. 관리자에게 문의하세요"),
     USER_IS_SUSPENSION(HttpStatus.BAD_REQUEST, "USER4015", "정지된 계정입니다."),
-    USER_IS_ALREADY_REGISTERED_KAKAO(HttpStatus.IM_USED, "USER4016", "이미 카카오계쩡으로 가입된 전화번호입니다. 카카오로 로그인해주세요."),
+    USER_IS_ALREADY_REGISTERED_KAKAO(HttpStatus.IM_USED, "USER4016", "이미 카카오계정으로 가입된 전화번호입니다. 카카오로 로그인해주세요."),
     USER_IS_INTEGRATED_KAKAO(HttpStatus.ACCEPTED, "USER4017", "사용자의 계정이 카카오계정과 통합되었습니다. YESOL 계정 혹은 카카오로 로그인해주세요."),
 
 
@@ -130,6 +130,7 @@ public enum ErrorStatus implements BaseErrorCode {
     BOARDCOMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMPLAINT4001", "신고내역을 찾지 못했습니다."),
     COMMENTCOMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "신고내역을 찾지 못했습니다."),
     PINCOMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "PIN4001", "신고내역을 찾지 못했습니다."),
+    NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "CHATROOM4001", "채팅방을 찾지 못했습니다."),
 
 
 

@@ -1,17 +1,17 @@
 package com.app.treen.user.entity;
 
+import com.app.treen.products.entity.enumeration.Gender;
+import com.app.treen.products.entity.enumeration.Size;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Entity
@@ -23,35 +23,45 @@ public class User {
     @Column(name = "users_id")
     private Long id;
 
-    // 공통 컬럼
+    @Column(name = "user_name", unique = true, nullable = false)
     private String userName;
+
+    @Column(name = "login_id", unique = true, nullable = false)
     private String loginId;
     private String password;
-    private String nickname;
-    private String phone;
-    private int gender; // 0은 남자, 1은 여자
-    private LocalDateTime birthDate;
-    private int height;
-    private int weight;
-    private String size;
-    private String status; // ACTIVE, DELETED
+    @Column(name = "phone_num", unique = true, nullable = false)
+    private String phoneNum;
 
+    @Enumerated(EnumType.STRING)
+    private UserStatus status; // ACTIVE, DELETED, DEACTIVATED
+
+    @Column(name = "profile_img_url")
     private String profileImgUrl;
 
-    @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    private Long point = 1000L;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "member_roles", joinColumns = @JoinColumn(name = "member_id"))
+    @Enumerated(EnumType.STRING)
+    private List<RoleType> roles = new ArrayList<>();
+
 
     public void changePassword(String password) {
         this.password = password;
     }
 
     public void changeStatusToActive() {
-        this.status = "ACTIVE";
+        this.status = UserStatus.ACTIVE;
     }
 
     public void changeStatusToDeleted() {
-        this.status = "DELETED";
+        this.status = UserStatus.DELETED;
+    }
+
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(password);
     }
 
 }
+
