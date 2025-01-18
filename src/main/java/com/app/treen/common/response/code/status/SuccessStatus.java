@@ -14,6 +14,8 @@ public enum SuccessStatus implements BaseCode {
     _OK(HttpStatus.OK, "COMMON200", "성공입니다."),
 
     // 멤버 관련 응답
+    JOIN_SUCCESS(HttpStatus.OK, "ACCOUNT200", "회원가입에 성공하였습니다."),
+    LOGIN_SUCCESS(HttpStatus.OK, "ACCOUNT200", "로그인에 성공하였습니다."),
 
     // ~~~ 관련 응답
     PIN_LIKE(HttpStatus.OK, "LIKE200", "좋아요 등록에 성공하였습니다."),

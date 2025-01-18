@@ -1,8 +1,7 @@
-package com.app.treen.user.dto.request;
+package com.app.treen.user.entity;
 
 import com.app.treen.products.entity.enumeration.Gender;
 import com.app.treen.products.entity.enumeration.Size;
-import com.app.treen.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 

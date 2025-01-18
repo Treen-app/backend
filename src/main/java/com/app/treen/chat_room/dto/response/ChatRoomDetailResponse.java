@@ -27,7 +27,7 @@ public class ChatRoomDetailResponse {
         public static MemberDto from(User user) {
             return MemberDto.builder()
                     .id(user.getId())
-                    .name(user.getNickname())
+                    .name(user.getUserName())
                     .build();
         }
     }

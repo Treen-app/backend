@@ -20,31 +20,23 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
-    public final DateTimePath<java.time.LocalDateTime> birthDate = createDateTime("birthDate", java.time.LocalDateTime.class);
-
-    public final StringPath email = createString("email");
-
-    public final NumberPath<Integer> gender = createNumber("gender", Integer.class);
-
-    public final NumberPath<Integer> height = createNumber("height", Integer.class);
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath loginId = createString("loginId");
 
     public final StringPath password = createString("password");
 
-    public final StringPath phone = createString("phone");
+    public final StringPath phoneNum = createString("phoneNum");
+
+    public final NumberPath<Long> point = createNumber("point", Long.class);
 
     public final StringPath profileImgUrl = createString("profileImgUrl");
 
-    public final ListPath<String, StringPath> roles = this.<String, StringPath>createList("roles", String.class, StringPath.class, PathInits.DIRECT2);
+    public final ListPath<RoleType, EnumPath<RoleType>> roles = this.<RoleType, EnumPath<RoleType>>createList("roles", RoleType.class, EnumPath.class, PathInits.DIRECT2);
 
-    public final StringPath size = createString("size");
-
-    public final StringPath status = createString("status");
+    public final EnumPath<UserStatus> status = createEnum("status", UserStatus.class);
 
     public final StringPath userName = createString("userName");
-
-    public final NumberPath<Integer> weight = createNumber("weight", Integer.class);
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));
