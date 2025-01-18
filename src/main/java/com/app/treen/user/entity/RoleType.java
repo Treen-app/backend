@@ -1,2 +1,5 @@
-package com.app.treen.user.entity;public class RoleType {
+package com.app.treen.user.entity;
+
+public enum RoleType {
+    USER,ADMIN
 }
