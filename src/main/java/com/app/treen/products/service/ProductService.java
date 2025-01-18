@@ -2,6 +2,7 @@ package com.app.treen.products.service;
 
 import com.app.treen.common.config.S3Uploader;
 import com.app.treen.common.response.code.status.ErrorStatus;
+import com.app.treen.jpa.repository.products.*;
 import com.app.treen.products.dto.ProductQueryHelper;
 import com.app.treen.products.dto.TradeQueryHelper;
 import com.app.treen.products.dto.request.TradeProductSaveDto;
@@ -14,7 +15,6 @@ import com.app.treen.products.dto.response.TransProductResponseDto;
 import com.app.treen.products.dto.response.TransResponseListDto;
 import com.app.treen.products.entity.*;
 import com.app.treen.products.entity.enumeration.TradeType;
-import com.app.treen.products.entity.repository.*;
 import com.app.treen.user.entity.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;

@@ -20,10 +20,24 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
+<<<<<<< HEAD
+=======
+    public final DateTimePath<java.time.LocalDateTime> birthDate = createDateTime("birthDate", java.time.LocalDateTime.class);
+
+    public final NumberPath<Integer> gender = createNumber("gender", Integer.class);
+
+    public final NumberPath<Integer> height = createNumber("height", Integer.class);
+
+>>>>>>> chatting
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath loginId = createString("loginId");
 
+<<<<<<< HEAD
+=======
+    public final StringPath nickname = createString("nickname");
+
+>>>>>>> chatting
     public final StringPath password = createString("password");
 
     public final StringPath phoneNum = createString("phoneNum");

@@ -1,23 +1,22 @@
 package com.app.treen.chat_room.service;
 
-import com.app.treen.chat_room.document.ChatMessage;
 import com.app.treen.common.response.code.status.ErrorStatus;
-import com.app.treen.chat_room.dto.request.MessageRequestDto;
 import com.app.treen.chat_room.dto.response.ChatRoomDetailResponse;
 import com.app.treen.chat_room.dto.response.MessageResponseDto;
 import com.app.treen.chat_room.dto.response.ChatRoomResponseDto;
 import com.app.treen.chat_room.entity.ChatRoom;
-import com.app.treen.chat_room.repository.ChatMessageRepository;
-import com.app.treen.chat_room.repository.ChatRoomRepository;
-import com.app.treen.products.entity.repository.TransProductRepository;
+import com.app.treen.jpa.repository.products.TransProductRepository;
+import com.app.treen.message.document.Message;
+import com.app.treen.mongo.repository.MessageRepository;
+import com.app.treen.jpa.repository.ChatRoomRepository;
 import com.app.treen.user.entity.User;
-import com.app.treen.user.repository.UserRepository;
+import com.app.treen.jpa.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
 public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
-    private final ChatMessageRepository chatMessageRepository;
+    private final MessageRepository messageRepository;
     private final TransProductRepository transProductRepository;
     private final UserRepository userRepository;
 
@@ -72,29 +71,29 @@ public class ChatRoomService {
     }
 
     private ChatRoomResponseDto.MessageDto getLastMessageDto(ChatRoom chatRoom) {
-        return chatMessageRepository.findFirstByChatRoomOrderByIdDesc(chatRoom)
+        return messageRepository.findFirstByRoomIdOrderByIdDesc(chatRoom.getId())
                 .map(ChatRoomResponseDto.MessageDto::from)
                 .orElse(null);
     }
 
     // 채팅 메시지 조회
     public Flux<MessageResponseDto> findChatMessages(Long id) {
-        Flux<ChatMessage> chatMessages = chatMessageRepository.findAllByRoomId(id);
-        return chatMessages.map(MessageResponseDto::of);
+        Flux<Message> messages = messageRepository.findAllByRoomId(id);
+        return messages.map(MessageResponseDto::of);
     }
 
-    @Transactional
-    public Mono<ChatMessage> saveChatMessage(MessageRequestDto chat) {
-        return chatMessageRepository.save(new ChatMessage(chat.getRoomId(), chat.getType(), chat.getContent(), chat.getWriterId(), LocalDateTime.now()));
-    }
-
+//    @Transactional
+//    public Mono<Message> saveChatMessage(MessageRequestDto chat) {
+//        return messageRepository.save(new Message(chat.getRoomId(), chat.getType(), chat.getContent(), chat.getWriterId()));
+//    }
+//
     public Mono<ChatRoomDetailResponse> getChatRoomDetail(Long loginMemberId, Long chatRoomId) {
 
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
 
         // Flux로 메세지를 비동기적으로 가져옴
-        Flux<ChatMessage> messages = chatMessageRepository.findAllByRoomIdOrderByIdAsc(chatRoomId);
+        Flux<Message> messages = messageRepository.findAllByRoomIdOrderByIdAsc(chatRoomId);
 
         return messages
                 .doOnNext(message -> message.read(loginMemberId))
@@ -114,7 +113,7 @@ public class ChatRoomService {
 //    }
 
     private Integer getUnreadCount(ChatRoom chatRoom, User member) {
-        return chatMessageRepository.countByChatRoomAndIsReadIsFalseAndSenderNot(chatRoom, member);
+        return messageRepository.countByRoomIdAndIsReadIsFalseAndWriterIdNot(chatRoom.getId(), member.getId());
     }
 
     @Transactional
