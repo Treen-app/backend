@@ -73,14 +73,14 @@ public class JwtProvider {
     public String createToken(RoleType role, CustomUserInfoDto member, Long expireTime) {
         Claims claims = Jwts.claims();
         claims.put("memberId", member.getMemberId());
-        claims.put("email", member.getEmail());
+        claims.put("loginId", member.getLoginId());
         claims.put("role", member.getRoles());
 
         Date now = new Date();
         return BEARER_PREFIX +
                 Jwts.builder()
                         .claim(AUTHORIZATION_KEY,role)
-                        .setSubject(member.getEmail())
+                        .setSubject(member.getLoginId())
                         .setClaims(claims)
                         .setExpiration(new Date(now.getTime() + expireTime))
                         .setIssuedAt(now)
@@ -161,7 +161,7 @@ public class JwtProvider {
     public TokenResponseDto createTokenByLogin(CustomUserInfoDto member) {
         String accessToken = createToken(RoleType.USER,member,TOKEN_TIME);
         String refreshToken = createToken(RoleType.USER,member,REFRESH_TOKEN_TIME);
-        return new TokenResponseDto(accessToken, refreshToken,member.getEmail());
+        return new TokenResponseDto(accessToken, refreshToken,member.getLoginId());
     }
 
 

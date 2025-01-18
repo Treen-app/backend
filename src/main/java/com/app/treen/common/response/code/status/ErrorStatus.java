@@ -16,6 +16,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
+
     // 멤버 관려 에러
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER4001", "사용자가 없습니다."),
     USER_NOT_ACTIVE(HttpStatus.BAD_REQUEST, "USER4002", "사용자는 활성 상태가 아닙니다."),
@@ -46,9 +47,6 @@ public enum ErrorStatus implements BaseErrorCode {
     // 인증 관련 에러
     USER_NOT_AUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH4001", "휴대폰 인증이 필요합니다."),
 
-    // 전공 관련 에러
-    MAJORS_NOR_FOUND(HttpStatus.NOT_FOUND, "MAJORS4001", "해당하는 전공이 없습니다."),
-    USER_MAJOR_IS_YOURS(HttpStatus.BAD_REQUEST, "MAJORS4002", "아마 사용자의 전공입니다."),
 
     // 토큰 관련 에러
     JWT_AUTHORIZATION_FAILED(HttpStatus.UNAUTHORIZED, "JWT4001", "권한이 없습니다."),
