@@ -1,4 +1,4 @@
-package com.app.treen.user.repository;
+package com.app.treen.jpa.repository.user;
 
 import com.app.treen.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

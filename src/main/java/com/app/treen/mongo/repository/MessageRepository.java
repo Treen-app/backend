@@ -1,4 +1,4 @@
-package com.app.treen.message.repository;
+package com.app.treen.mongo.repository;
 
 import com.app.treen.chat_room.entity.ChatRoom;
 import com.app.treen.message.document.Message;
@@ -12,7 +12,7 @@ public interface MessageRepository extends ReactiveMongoRepository<Message, Stri
     Flux<Message> findAllByRoomId(Long roomId);
     Flux<Message> findAllByRoomIdOrderByIdAsc(Long roomId);
 
-    Integer countByChatRoomAndIsReadIsFalseAndSenderNot(ChatRoom chatRoom, User member);
+    Integer countByRoomIdAndIsReadIsFalseAndWriterIdNot(Long roomId, Long memberId);
 
-    Optional<Message> findFirstByChatRoomOrderByIdDesc(ChatRoom chatRoom);
+    Optional<Message> findFirstByRoomIdOrderByIdDesc(Long roomId);
 }

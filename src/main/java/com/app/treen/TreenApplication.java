@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableJpaAuditing
 @EnableJpaRepositories(basePackages = "com.app.treen.jpa.repository")
 @EnableMongoRepositories(basePackages = "com.app.treen.mongo")
-@SpringBootApplication()
+@SpringBootApplication
 public class TreenApplication {
 
 	public static void main(String[] args) {

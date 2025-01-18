@@ -41,6 +41,9 @@ public class QTransProduct extends EntityPathBase<TransProduct> {
 
     public final EnumPath<com.app.treen.products.entity.enumeration.Method> method = createEnum("method", com.app.treen.products.entity.enumeration.Method.class);
 
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+
     public final StringPath name = createString("name");
 
     public final NumberPath<Long> point = createNumber("point", Long.class);

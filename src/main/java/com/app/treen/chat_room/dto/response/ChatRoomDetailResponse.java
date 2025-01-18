@@ -47,7 +47,7 @@ public class ChatRoomDetailResponse {
                     .senderId(message.getWriterId())
                     .type(message.getType())
                     .content(message.getContent())
-                    .sendDate(message.getCreatedAt())
+                    .sendDate(message.getCreatedDate())
                     .build();
         }
     }

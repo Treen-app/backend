@@ -41,6 +41,9 @@ public class QTradeProduct extends EntityPathBase<TradeProduct> {
 
     public final EnumPath<com.app.treen.products.entity.enumeration.Method> method = createEnum("method", com.app.treen.products.entity.enumeration.Method.class);
 
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+
     public final StringPath name = createString("name");
 
     public final EnumPath<com.app.treen.products.entity.enumeration.Size> size = createEnum("size", com.app.treen.products.entity.enumeration.Size.class);

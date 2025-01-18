@@ -5,12 +5,12 @@ import com.app.treen.chat_room.dto.response.ChatRoomDetailResponse;
 import com.app.treen.chat_room.dto.response.MessageResponseDto;
 import com.app.treen.chat_room.dto.response.ChatRoomResponseDto;
 import com.app.treen.chat_room.entity.ChatRoom;
+import com.app.treen.jpa.repository.products.TransProductRepository;
 import com.app.treen.message.document.Message;
 import com.app.treen.mongo.repository.MessageRepository;
 import com.app.treen.jpa.repository.ChatRoomRepository;
-import com.app.treen.products.entity.TransProductRepository;
 import com.app.treen.user.entity.User;
-import com.app.treen.user.repository.UserRepository;
+import com.app.treen.jpa.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,7 +70,7 @@ public class ChatRoomService {
     }
 
     private ChatRoomResponseDto.MessageDto getLastMessageDto(ChatRoom chatRoom) {
-        return messageRepository.findFirstByChatRoomOrderByIdDesc(chatRoom)
+        return messageRepository.findFirstByRoomIdOrderByIdDesc(chatRoom.getId())
                 .map(ChatRoomResponseDto.MessageDto::from)
                 .orElse(null);
     }
@@ -112,7 +112,7 @@ public class ChatRoomService {
 //    }
 
     private Integer getUnreadCount(ChatRoom chatRoom, User member) {
-        return messageRepository.countByChatRoomAndIsReadIsFalseAndSenderNot(chatRoom, member);
+        return messageRepository.countByRoomIdAndIsReadIsFalseAndWriterIdNot(chatRoom.getId(), member.getId());
     }
 
     @Transactional

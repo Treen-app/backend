@@ -32,7 +32,7 @@ public class MessageResponseDto {
                 .roomId(chatMessage.getRoomId())
                 .content(chatMessage.getContent())
                 .writerId(chatMessage.getWriterId())
-                .createdDate(chatMessage.getCreatedAt())
+                .createdDate(chatMessage.getCreatedDate())
                 .build();
     }
 }

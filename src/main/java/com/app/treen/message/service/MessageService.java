@@ -1,6 +1,5 @@
 package com.app.treen.message.service;
 
-import com.app.treen.aws.service.FileManager;
 import com.app.treen.chat_room.entity.ChatRoom;
 import com.app.treen.jpa.repository.ChatRoomRepository;
 import com.app.treen.common.response.code.status.ErrorStatus;
@@ -9,7 +8,7 @@ import com.app.treen.message.dto.MessageRequest;
 import com.app.treen.mongo.repository.MessageRepository;
 import com.app.treen.mongo.repository.MessageType;
 import com.app.treen.user.entity.User;
-import com.app.treen.user.repository.UserRepository;
+import com.app.treen.jpa.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,7 +23,7 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final FileManager fileManager;
+    //private final FileManager fileManager;
     private final ApplicationEventPublisher eventPublisher;
 
 

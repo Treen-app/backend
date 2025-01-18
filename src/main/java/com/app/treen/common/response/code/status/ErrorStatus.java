@@ -130,7 +130,7 @@ public enum ErrorStatus implements BaseErrorCode {
     BOARDCOMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMPLAINT4001", "신고내역을 찾지 못했습니다."),
     COMMENTCOMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "신고내역을 찾지 못했습니다."),
     PINCOMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "PIN4001", "신고내역을 찾지 못했습니다."),
-    NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "CHATROOM4001", "채팅방을 찾지 못했습니다.");
+    NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "CHATROOM4001", "채팅방을 찾지 못했습니다."),
 
 
 

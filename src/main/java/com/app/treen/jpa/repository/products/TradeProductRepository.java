@@ -1,4 +1,4 @@
-package com.app.treen.products.entity.repository;
+package com.app.treen.jpa.repository.products;
 
 import com.app.treen.products.entity.TradeProduct;
 import com.app.treen.user.entity.User;
