@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomUserInfoDto {
     Long memberId;
-    String email;
+    String loginId;
     List<RoleType> roles;
 }
