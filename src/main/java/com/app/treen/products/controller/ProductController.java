@@ -1,6 +1,6 @@
 package com.app.treen.products.controller;
 
-import com.app.treen.common.response.ApiResponse;
+
 import com.app.treen.common.response.code.status.SuccessStatus;
 import com.app.treen.products.dto.ProductQueryHelper;
 import com.app.treen.products.dto.TradeQueryHelper;

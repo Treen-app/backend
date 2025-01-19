@@ -66,7 +66,7 @@ public class ChatRoomService {
                         .unreadCount(getUnreadCount(chatRoom, member))
                         //.otherMember(getOtherMemberDto(chatRoom.getOtherMember(loginMemberId)))
                         .lastMessage(getLastMessageDto(chatRoom))
-                        .isReserved().build())
+                        .isReserved(false).build())
                 .collect(Collectors.toList());
     }
 
