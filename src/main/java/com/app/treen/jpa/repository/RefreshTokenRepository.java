@@ -1,4 +1,4 @@
-package com.app.treen.user.entity.repository;
+package com.app.treen.jpa.repository;
 
 import com.app.treen.user.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;

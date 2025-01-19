@@ -75,33 +75,59 @@ public class TransProduct extends BaseTimeEntity {
     private List<TransPImg> images;
 
 
-    public void updateDetails(TransProductUpdateDto dto, Category category) {
-        this.name = dto.getName();
-        this.usedTerm = dto.getUsedTerm();
-        this.detail = dto.getDetail();
-        this.gender = dto.getGender();
-        this.size = dto.getSize();
-        this.usedRank = dto.getUsedRank();
-        this.point = dto.getPoint();
-        this.method = dto.getMethod();
+
+    public void updateDetails(
+            String name,
+            String usedTerm,
+            String detail,
+            Gender gender,
+            Size size,
+            UsedRank usedRank,
+            Long point,
+            Method method,
+            Category category,
+            List<String> newImageUrls) {
+
+        this.name = name;
+        this.usedTerm = usedTerm;
+        this.detail = detail;
+        this.gender = gender;
+        this.size = size;
+        this.usedRank = usedRank;
+        this.point = point;
+        this.method = method;
         this.category = category;
 
         // 이미지 업데이트
-        updateImages(dto.getImageUrls());
+        updateImages(newImageUrls);
+    }
+    @Builder
+    public TransProduct(User user, String name, Category category, String usedTerm,
+                        String detail, Gender gender, Size size, UsedRank usedRank,
+                        Long point, Method method, Status transactionStatus) {
+        this.user = user;
+        this.name = name;
+        this.category = category;
+        this.usedTerm = usedTerm;
+        this.detail = detail;
+        this.gender = gender;
+        this.size = size;
+        this.usedRank = usedRank;
+        this.point = point != null ? point : 0L;
+        this.method = method != null ? method : Method.ALL;
+        this.transactionStatus = transactionStatus != null ? transactionStatus : Status.BEFORE;
+
     }
 
+    /**
+     * 기존 이미지 삭제 후 새로운 이미지 리스트로 업데이트
+     */
+
     private void updateImages(List<String> imageUrls) {
-        // 기존 이미지 목록 초기화 (orphanRemoval=true 설정 덕분에 자동 삭제)
         this.images.clear();
 
-        // 새로운 이미지 목록 추가
         for (int i = 0; i < imageUrls.size(); i++) {
-            this.images.add(TransPImg.builder()
-                    .transProduct(this)
-                    .imgUrl(imageUrls.get(i))
-                    .sortOrder(i)
-                    .isMain(i == 0) // 첫 번째 이미지를 대표 이미지로 설정
-                    .build());
+            this.images.add(new TransPImg(i, i == 0, imageUrls.get(i), this));
         }
     }
 

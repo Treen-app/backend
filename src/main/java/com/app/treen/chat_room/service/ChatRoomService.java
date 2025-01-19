@@ -1,3 +1,4 @@
+/*
 package com.app.treen.chat_room.service;
 
 import com.app.treen.common.response.code.status.ErrorStatus;
@@ -132,3 +133,4 @@ public class ChatRoomService {
 //
 //    }
 }
+*/
