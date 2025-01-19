@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Setter // 직우기
 @Table(name = "trade_products")
 public class TradeProduct extends BaseTimeEntity {
     @Id

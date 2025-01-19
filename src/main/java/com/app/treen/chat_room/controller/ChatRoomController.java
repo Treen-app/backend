@@ -5,7 +5,7 @@
 //import com.app.treen.chat_room.dto.response.*;
 //import com.app.treen.chat_room.service.ChatRoomService;
 //import com.app.treen.common.jwt.service.dto.CustomUserDetails;
-//import com.app.treen.common.response.ApiResponse;
+//import com.app.treen.common.response.ResponseEntity;
 //import jakarta.validation.Valid;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.http.ResponseEntity;
@@ -43,40 +43,40 @@
 //
 //    // 채팅방 목록 조회
 //    @GetMapping("/auth/chat-list")
-//    public ApiResponse<ChatRoomsResponse> getChatRooms(@AuthenticationPrincipal CustomUserDetails userDetails) {
+//    public ResponseEntity<ChatRoomsResponse> getChatRooms(@AuthenticationPrincipal CustomUserDetails userDetails) {
 //
 //        ChatRoomsResponse chatRoomsResponse = ChatRoomsResponse.builder()
 //                .chatRooms(chatRoomService.getChatRooms(userDetails.getMember().getId()))
 //                .build();
 //
-//        return ApiResponse.onSuccess(chatRoomsResponse);
+//        return ResponseEntity.onSuccess(chatRoomsResponse);
 //    }
 //
 //    // 채팅방 조회
 //    @GetMapping("auth/{chatRoomId}")
-//    public Mono<ApiResponse<ChatRoomDetailResponse>> getChatRoomDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
+//    public Mono<ResponseEntity<ChatRoomDetailResponse>> getChatRoomDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
 //                                                                 @PathVariable Long chatRoomId) {
 //
 //        return chatRoomService.getChatRoomDetail(userDetails.getMember().getId(), chatRoomId)
-//                .map(ApiResponse::onSuccess);
+//                .map(ResponseEntity::onSuccess);
 //    }
 //
 //    // 채팅방 생성
 //    @PostMapping("auth/create")
-//    public ApiResponse<ChatRoomCreateResponse> createChatRoom(@AuthenticationPrincipal CustomUserDetails userDetails,
+//    public ResponseEntity<ChatRoomCreateResponse> createChatRoom(@AuthenticationPrincipal CustomUserDetails userDetails,
 //                                                              @Valid @RequestBody ChatRoomRequestDto dto) {
 //        Long chatRoomId = chatRoomService.saveChatRoom(userDetails.getMember().getId(),
 //                dto.getSellerId(), dto.getProductId());
-//        return ApiResponse.onSuccess(ChatRoomCreateResponse.builder()
+//        return ResponseEntity.onSuccess(ChatRoomCreateResponse.builder()
 //                .chatRoomId(chatRoomId)
 //                .build());
 //    }
 //
 //    // 이전 채팅 메시지들 조회
 //    @GetMapping("/find/chat/list/{id}")
-//    public Mono<ApiResponse<List<MessageResponseDto>>> findMessages(@PathVariable("id") Long id) {
+//    public Mono<ResponseEntity<List<MessageResponseDto>>> findMessages(@PathVariable("id") Long id) {
 //        Flux<MessageResponseDto> response = chatRoomService.findChatMessages(id);
-//        return response.collectList().map(ApiResponse::onSuccess);
+//        return response.collectList().map(ResponseEntity::onSuccess);
 //    }
 //
 //    // 메시지 송신 및 수신
@@ -91,44 +91,46 @@
 //    }
 //
 //}
-
+/*
     // 채팅방 목록 조회
     @GetMapping("/auth/chat-list")
-    public ApiResponse<ChatRoomsResponse> getChatRooms(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<ChatRoomsResponse> getChatRooms(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
         ChatRoomsResponse chatRoomsResponse = ChatRoomsResponse.builder()
                 .chatRooms(chatRoomService.getChatRooms(userDetails.getMember().getId()))
                 .build();
 
-        return ApiResponse.onSuccess(chatRoomsResponse);
+        return ResponseEntity.onSuccess(chatRoomsResponse);
     }
 
     // 채팅방 조회
     @GetMapping("auth/{chatRoomId}")
-    public Mono<ApiResponse<ChatRoomDetailResponse>> getChatRoomDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public Mono<ResponseEntity<ChatRoomDetailResponse>> getChatRoomDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                  @PathVariable Long chatRoomId) {
 
         return chatRoomService.getChatRoomDetail(userDetails.getMember().getId(), chatRoomId)
-                .map(ApiResponse::onSuccess);
+                .map(ResponseEntity::onSuccess);
     }
 
     // 채팅방 생성
     @PostMapping("auth/create")
-    public ApiResponse<ChatRoomCreateResponse> createChatRoom(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<ChatRoomCreateResponse> createChatRoom(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                               @Valid @RequestBody ChatRoomRequestDto dto) {
         Long chatRoomId = chatRoomService.saveChatRoom(userDetails.getMember().getId(),
                 dto.getSellerId(), dto.getProductId());
-        return ApiResponse.onSuccess(ChatRoomCreateResponse.builder()
+        return ResponseEntity.onSuccess(ChatRoomCreateResponse.builder()
                 .chatRoomId(chatRoomId)
                 .build());
     }
 
     // 이전 채팅 메시지들 조회
     @GetMapping("/find/chat/list/{id}")
-    public Mono<ApiResponse<List<MessageResponseDto>>> findMessages(@PathVariable("id") Long id) {
+    public Mono<ResponseEntity<List<MessageResponseDto>>> findMessages(@PathVariable("id") Long id) {
         Flux<MessageResponseDto> response = chatRoomService.findChatMessages(id);
-        return response.collectList().map(ApiResponse::onSuccess);
+        return response.collectList().map(ResponseEntity::onSuccess);
     }
+
+ */
 
 //    // 메시지 송신 및 수신
 //    @MessageMapping("/message")
@@ -141,4 +143,3 @@
 //        }).thenReturn(ResponseEntity.ok().build());
 //    }
 
-}

@@ -29,7 +29,7 @@ public class QRefreshToken extends EntityPathBase<RefreshToken> {
     public final StringPath keyUserId = createString("keyUserId");
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
     public final StringPath refreshToken = createString("refreshToken");
 
