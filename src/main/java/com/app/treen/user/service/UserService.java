@@ -2,6 +2,7 @@ package com.app.treen.user.service;
 
 import com.app.treen.common.response.code.status.ErrorStatus;
 import com.app.treen.common.response.exception.CustomException;
+import com.app.treen.jpa.repository.user.UserRepository;
 import com.app.treen.user.dto.request.CustomUserInfoDto;
 import com.app.treen.user.dto.request.JoinRequestDto;
 import com.app.treen.user.dto.request.LoginRequestDto;
@@ -12,7 +13,6 @@ import com.app.treen.user.entity.RefreshToken;
 import com.app.treen.user.entity.RoleType;
 import com.app.treen.user.entity.User;
 import com.app.treen.user.entity.repository.RefreshTokenRepository;
-import com.app.treen.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

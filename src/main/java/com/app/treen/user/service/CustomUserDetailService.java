@@ -1,8 +1,8 @@
 package com.app.treen.user.service;
 
 import com.app.treen.common.response.code.status.ErrorStatus;
+import com.app.treen.jpa.repository.user.UserRepository;
 import com.app.treen.user.entity.User;
-import com.app.treen.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
