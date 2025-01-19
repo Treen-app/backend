@@ -161,7 +161,19 @@ public class ProductService {
             List<TransPImg> newImages = dto.toImageEntities(existingProduct);
             transPImgRepository.saveAll(newImages);
         }
-        existingProduct.updateDetails(dto, category);
+        existingProduct.updateDetails(
+                dto.getName(),
+                dto.getUsedTerm(),
+                dto.getDetail(),
+                dto.getGender(),
+                dto.getSize(),
+                dto.getUsedRank(),
+                dto.getPoint(),
+                dto.getMethod(),
+                category,
+                dto.getImageUrls()
+        );
+
         transProductRepository.save(existingProduct);
     }
 

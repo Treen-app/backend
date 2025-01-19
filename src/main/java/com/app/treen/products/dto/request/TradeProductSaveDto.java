@@ -3,16 +3,13 @@ package com.app.treen.products.dto.request;
 import com.app.treen.products.entity.*;
 import com.app.treen.products.entity.enumeration.*;
 import com.app.treen.user.entity.User;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class TradeProductSaveDto {
 
@@ -23,22 +20,25 @@ public class TradeProductSaveDto {
     private UsedRank usedRank;
     private Method method;
     private Gender gender;
-    private List<String> imageUrls;
     private String wishColor;
     private Size wishSize;
-
-    private List<Long> wishCategoryIds; // 희망 카테고리 ID 목록
-    private List<Long> regionIds; // 리전 ID 목록
-
-    // 교환 타입
     private TradeType tradeType;
-
-    // 상품 카테고리
     private Long categoryId;
 
+    private List<String> imageUrls = new ArrayList<>(); // 이미지 리스트
+    private List<Long> wishCategoryIds = new ArrayList<>(); // 희망 카테고리 리스트
+    private List<Long> regionIds = new ArrayList<>(); // 거래 가능 지역 리스트
 
     public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls; // 서비스에서 URL을 설정
+        this.imageUrls = (imageUrls != null) ? imageUrls : new ArrayList<>();
+    }
+
+    public void setWishCategoryIds(List<Long> wishCategoryIds) {
+        this.wishCategoryIds = (wishCategoryIds != null) ? wishCategoryIds : new ArrayList<>();
+    }
+
+    public void setRegionIds(List<Long> regionIds) {
+        this.regionIds = (regionIds != null) ? regionIds : new ArrayList<>();
     }
 
     public TradeProduct toEntity(User user, Category category) {
@@ -53,6 +53,8 @@ public class TradeProductSaveDto {
                 .usedTerm(this.usedTerm)
                 .wishColor(this.wishColor)
                 .wishSize(this.wishSize)
+                .tradeType(this.tradeType)
+                .category(category)
                 .build();
     }
 
@@ -81,7 +83,6 @@ public class TradeProductSaveDto {
     }
 
     public List<TradeRegion> toRegionEntities(TradeProduct tradeProduct, List<Region> regions) {
-        // tradeProduct와 regions가 null인 경우 예외를 던져서 처리할 수 있도록 한다.
         if (tradeProduct == null) {
             throw new IllegalArgumentException("TradeProduct cannot be null");
         }
@@ -91,10 +92,9 @@ public class TradeProductSaveDto {
 
         List<TradeRegion> tradeRegions = new ArrayList<>();
         for (Region region : regions) {
-            // TradeRegion을 생성하고 tradeProduct와 region을 설정
             tradeRegions.add(TradeRegion.builder()
-                    .tradeProduct(tradeProduct)  // tradeProduct 설정
-                    .region(region)              // region 설정
+                    .tradeProduct(tradeProduct)
+                    .region(region)
                     .build());
         }
         return tradeRegions;
