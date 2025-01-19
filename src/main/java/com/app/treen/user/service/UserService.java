@@ -2,6 +2,8 @@ package com.app.treen.user.service;
 
 import com.app.treen.common.response.code.status.ErrorStatus;
 import com.app.treen.common.response.exception.CustomException;
+import com.app.treen.jpa.repository.RefreshTokenRepository;
+import com.app.treen.jpa.repository.user.UserRepository;
 import com.app.treen.user.dto.request.CustomUserInfoDto;
 import com.app.treen.user.dto.request.JoinRequestDto;
 import com.app.treen.user.dto.request.LoginRequestDto;
@@ -11,8 +13,6 @@ import com.app.treen.user.dto.response.TokenResponseDto;
 import com.app.treen.user.entity.RefreshToken;
 import com.app.treen.user.entity.RoleType;
 import com.app.treen.user.entity.User;
-import com.app.treen.user.entity.repository.RefreshTokenRepository;
-import com.app.treen.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +64,7 @@ public class UserService {
         String password = passwordEncoder.encode(joinRequest.getPassword());
 
         // 닉네임 중복 확인
-        if (userRepository.findByName(name).isPresent()) {
+        if (userRepository.findByUserName(name).isPresent()) {
             throw new CustomException(ErrorStatus.USER_NICKNAME_DUPLICATED);
         }
 
@@ -95,8 +95,8 @@ public class UserService {
         String loginId = loginRequest.getLoginId();
         String password = loginRequest.getPassword();
 
-        User member = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_ACCOUNT_NOT_MATCHED.getMessage()));
+        User member = (User) userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.USER_ACCOUNT_NOT_MATCHED));
 
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new CustomException(ErrorStatus.PASSWORD_NOT_MATCHED);

@@ -42,7 +42,7 @@ public class QTradeProduct extends EntityPathBase<TradeProduct> {
     public final EnumPath<com.app.treen.products.entity.enumeration.Method> method = createEnum("method", com.app.treen.products.entity.enumeration.Method.class);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
     public final StringPath name = createString("name");
 
