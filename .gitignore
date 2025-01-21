@@ -30,7 +30,7 @@ out/
 !**/src/test/**/out/
 
 ### env ###
-.env
+./.env
 src/main/java/com/app/treen/.env
 
 ### NetBeans ###
