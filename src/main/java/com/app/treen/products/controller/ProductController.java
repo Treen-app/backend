@@ -39,10 +39,10 @@ public class ProductController {
     public ResponseEntity<TransProductResponseDto> saveTransProduct(
             @RequestPart("images") List<MultipartFile> images, // 이미지 리스트로 변경
             @RequestPart("product") TransProductSaveDto requestDto,
-            User user
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) throws IOException {
       //  User user = new User(); // 현재 사용자의 정보를 가져오는 로직 추가 필요
-        TransProductResponseDto responseDto = productService.saveTransProduct(requestDto,images, user);
+        TransProductResponseDto responseDto = productService.saveTransProduct(requestDto,images, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
@@ -141,17 +141,19 @@ public class ProductController {
 
     @Operation(summary = "거래상품 좋아요 및 취소", description = "좋아요 되어있을 경우 취소, 안되어있을 경우 좋아요 등록됩니다.")
     @GetMapping("/transaction/like/{productId}")
-    public ResponseEntity<?> registerLikesTransProduct(@PathVariable Long productId, User user){
-        boolean isLike = productService.increaseLikeTransaction(productId, user);
+    public ResponseEntity<?> registerLikesTransProduct(@PathVariable Long productId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        boolean isLike = productService.increaseLikeTransaction(productId, userDetails.getUser());
         return isLike ? ResponseEntity.status(HttpStatus.OK).body(SuccessStatus.PIN_LIKE) : ResponseEntity.status(HttpStatus.OK).body(SuccessStatus.PIN_UNLIKE);
     }
 
     @Operation(summary = "교환상품 좋아요 및 취소", description = "좋아요 되어있을 경우 취소, 안되어있을 경우 좋아요 등록됩니다.")
     @GetMapping("/trade/like/{productId}")
-    public ResponseEntity<?> registerLikesTradeProduct(@PathVariable Long productId, User user){
-        boolean isLike = productService.increaseLikeTrade(productId, user);
+    public ResponseEntity<?> registerLikesTradeProduct(@PathVariable Long productId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        boolean isLike = productService.increaseLikeTrade(productId, userDetails.getUser());
         return isLike ? ResponseEntity.status(HttpStatus.OK).body(SuccessStatus.PIN_LIKE) : ResponseEntity.status(HttpStatus.OK).body(SuccessStatus.PIN_UNLIKE);
     }
+
+
 
 
 }
