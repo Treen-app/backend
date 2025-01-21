@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 h2/
 src/main/resources/application.yaml
+src/main/resources/application.yml
 
 ### STS ###
 .apt_generated
@@ -29,6 +30,7 @@ out/
 !**/src/test/**/out/
 
 ### env ###
+.env
 src/main/java/com/app/treen/.env
 
 ### NetBeans ###
