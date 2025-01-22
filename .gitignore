@@ -1,12 +1,10 @@
 HELP.md
 .gradle
 build/
-!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/
 !**/src/main/**/build/
 !**/src/test/**/build/
 h2/
-src/main/resources/application.yaml
-src/main/resources/application.yml
 
 ### STS ###
 .apt_generated
@@ -30,8 +28,7 @@ out/
 !**/src/test/**/out/
 
 ### env ###
-./.env
-src/main/java/com/app/treen/.env
+.env
 
 ### NetBeans ###
 /nbproject/private/
@@ -42,3 +39,9 @@ src/main/java/com/app/treen/.env
 
 ### VS Code ###
 .vscode/
+
+gradle/
+settings.gradle
+gradlew
+gradlew.bat
+.DS_Store
