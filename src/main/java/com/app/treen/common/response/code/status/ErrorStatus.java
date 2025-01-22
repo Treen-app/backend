@@ -130,6 +130,9 @@ public enum ErrorStatus implements BaseErrorCode {
     PINCOMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "PIN4001", "신고내역을 찾지 못했습니다."),
     NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "CHATROOM4001", "채팅방을 찾지 못했습니다."),
 
+    // 이미지 에러
+    IMAGE_MUST_BE_UPLOADED(HttpStatus.BAD_REQUEST, "IMAGE4001", "이미지는 1장 이상 업로드해야합니다."),
+    IMAGE_OVER_UPLOADED(HttpStatus.BAD_REQUEST, "IMAGE4001", "이미지는 5장까지만 업로드할 수 있습니다."),
 
 
     // 상품 에러

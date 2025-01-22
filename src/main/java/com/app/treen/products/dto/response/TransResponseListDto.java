@@ -28,15 +28,11 @@ public class TransResponseListDto {
     private Method method; // 거래 방법
     private UsedRank usedRank; // 사용
 
-    public TransResponseListDto(TransProduct transProduct) {
+    public TransResponseListDto(TransProduct transProduct, TransPImg transPImg) {
         this.id = transProduct.getId(); // 상품 ID
 
         // 대표 사진 (첫 번째 이미지를 대표 사진으로 설정)
-        this.representativeImage = transProduct.getImages().stream()
-                .map(TransPImg::getImgUrl)
-                .findFirst()
-                .orElse(null);
-
+        this.representativeImage = transPImg.getImgUrl();
         this.name = transProduct.getName(); // 상품명
         this.category = transProduct.getCategory().getName(); // 카테고리
         this.likedCount = transProduct.getLikedCount(); // 좋아요 수

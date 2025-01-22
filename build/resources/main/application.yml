@@ -5,6 +5,9 @@
 #    username: ${DB_USERNAME:root}
 #    password: ${DB_PASSWORD:password}
 spring:
+  redis:
+    host: localhost
+    port: 6379
   config:
     import: optional:file:.env[.properties]  # .env 파일을 직접 로드
   datasource:
@@ -37,11 +40,6 @@ jwt:
   secret:
     key: ${JWT_SECRET_KEY}
     refresh: ${JWT_REFRESH_KEY}
-  redis:
-    host: localhost
-    port: 6379
-    repositories:
-      enabled: false
 coolsms:
   apiKey: ${COOL_SMS_KEY}
   apiSecret: ${COOL_SMS_SECRET_KEY}
