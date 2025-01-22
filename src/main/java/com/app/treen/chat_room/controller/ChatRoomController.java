@@ -19,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/chatroom")
 public class ChatRoomController {
 
     private final SimpMessageSendingOperations template;
@@ -38,7 +39,7 @@ public class ChatRoomController {
     // 채팅방 조회
     @GetMapping("auth/{chatRoomId}")
     public Mono<ResponseEntity<ChatRoomDetailResponse>> getChatRoomDetail(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                 @PathVariable Long chatRoomId) {
+                                                                          @PathVariable Long chatRoomId) {
 
         return chatRoomService.getChatRoomDetail(userDetails.getUser().getId(), chatRoomId)
                 .map(ResponseEntity::ok);
@@ -47,7 +48,7 @@ public class ChatRoomController {
     // 채팅방 생성
     @PostMapping("auth/create")
     public ResponseEntity<ChatRoomCreateResponse> createChatRoom(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                              @Valid @RequestBody ChatRoomRequestDto dto) {
+                                                                 @Valid @RequestBody ChatRoomRequestDto dto) {
         Long chatRoomId = chatRoomService.saveChatRoom(userDetails.getUser().getId(),
                 dto.getSellerId(), dto.getProductId());
         return ResponseEntity.ok(ChatRoomCreateResponse.builder()
@@ -67,15 +68,15 @@ public class ChatRoomController {
     // 채팅방 조회
     @GetMapping("test/{chatRoomId}")
     public Mono<ResponseEntity<ChatRoomDetailResponse>> getChatRoomDetailTest(
-                                                                          @PathVariable Long chatRoomId) {
+            @PathVariable("chatRoomId") Long chatRoomId) {
 
         return chatRoomService.getChatRoomDetail(1L, chatRoomId)
                 .map(ResponseEntity::ok);
     }
 
-    @GetMapping("test/create")
+    @PostMapping("test/create")
     public ResponseEntity<ChatRoomCreateResponse> createChatRoomTest(
-                                                                 @Valid @RequestBody ChatRoomRequestDto dto) {
+            @Valid @RequestBody ChatRoomRequestDto dto) {
         Long chatRoomId = chatRoomService.saveChatRoom(1L,
                 dto.getSellerId(), dto.getProductId());
         return ResponseEntity.ok(ChatRoomCreateResponse.builder()
@@ -88,6 +89,8 @@ public class ChatRoomController {
         Flux<MessageResponseDto> response = chatRoomService.findChatMessages(id);
         return response.collectList().map(ResponseEntity::ok);
     }
+
+}
 
     // 메시지 송신 및 수신
 //    @MessageMapping("/message")

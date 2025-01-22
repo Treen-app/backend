@@ -61,7 +61,9 @@ public class WebSecurityConfig {
                                 "/swagger-ui/**", // Swagger UI
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
-                                "/webjars/**"
+                                "/webjars/**",
+                                "/ws/**",
+                                "/**"
                         ).permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         //  인증이 필요한 경로 (JWT 필요)
@@ -78,18 +80,17 @@ public class WebSecurityConfig {
     // CORS 설정
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*");
+        configuration.addAllowedOrigin("http://localhost:3000"); // 특정 도메인 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
         configuration.setAllowCredentials(true); // 인증 정보 포함 요청 허용
-        configuration.addAllowedHeader("Authorization");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 CORS 정책 적용
 
         return source;
     }
+
 
 
 }

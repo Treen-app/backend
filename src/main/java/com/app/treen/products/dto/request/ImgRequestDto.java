@@ -5,20 +5,17 @@ import com.app.treen.products.entity.TradePImg;
 import com.app.treen.products.entity.TradeProduct;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class ImgRequestDto {
-    private List<String> imageUrls;
 
-    public ImgRequestDto(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
-    }
-
-    public List<TradePImg> toImageEntities(TradeProduct tradeProduct) {
+    public List<TradePImg> toImageEntities(TradeProduct tradeProduct , List<String> imageUrls) {
         List<TradePImg> images = new ArrayList<>();
         for (int i = 0; i < imageUrls.size(); i++) {
             images.add(TradePImg.builder()

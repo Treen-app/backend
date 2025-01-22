@@ -27,14 +27,9 @@ public class TradeResponseListDto {
     private Method method; // 거래 방법
     private UsedRank usedRank; // 사용
 
-    public TradeResponseListDto(TradeProduct tradeProduct) {
+    public TradeResponseListDto(TradeProduct tradeProduct, TradePImg tradePImg) {
         this.id = tradeProduct.getId();
-        // 상품 대표 사진 (첫 번째 이미지를 대표 사진으로 설정)
-        this.representativeImage = tradeProduct.getImages().stream()
-                .map(TradePImg::getImgUrl)
-                .findFirst()
-                .orElse(null);
-
+        this.representativeImage = tradePImg.getImgUrl();
         this.name = tradeProduct.getName(); // 상품명
         this.category = tradeProduct.getCategory().getName(); // 카테고리
         this.likedCount = tradeProduct.getLikedCount(); // 좋아요 수

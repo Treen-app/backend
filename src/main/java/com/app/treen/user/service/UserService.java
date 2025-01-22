@@ -2,7 +2,6 @@ package com.app.treen.user.service;
 
 import com.app.treen.common.response.code.status.ErrorStatus;
 import com.app.treen.common.response.exception.CustomException;
-import com.app.treen.jpa.repository.RefreshTokenRepository;
 import com.app.treen.jpa.repository.user.UserRepository;
 import com.app.treen.user.dto.request.CustomUserInfoDto;
 import com.app.treen.user.dto.request.JoinRequestDto;
@@ -10,7 +9,6 @@ import com.app.treen.user.dto.request.LoginRequestDto;
 import com.app.treen.user.dto.response.LoginResponseDto;
 import com.app.treen.user.dto.response.MemberResponseDto;
 import com.app.treen.user.dto.response.TokenResponseDto;
-import com.app.treen.user.entity.RefreshToken;
 import com.app.treen.user.entity.RoleType;
 import com.app.treen.user.entity.User;
 import jakarta.transaction.Transactional;
@@ -27,34 +25,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    private final RefreshTokenRepository refreshTokenRepository;
-
-    @Transactional
-    public void saveRefreshToken(TokenResponseDto tokenDto) {
-        RefreshToken refreshToken = RefreshToken.builder().keyUserId(tokenDto.getKey()).refreshToken(tokenDto.getRefreshToken()).build();
-        String userId = refreshToken.getKeyUserId();
-
-        if (refreshTokenRepository.existsByKeyUserId(userId)) {
-            refreshTokenRepository.deleteByKeyUserId(userId);
-        }
-        refreshTokenRepository.save(refreshToken);
-    }
-
-    public RefreshToken getRefreshToken(String refreshToken) {
-        return refreshTokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new CustomException(ErrorStatus.JWT_INVALID));
-    }
-
-    public String validateRefreshToken(String refreshToken) {
-        RefreshToken getRefreshToken = getRefreshToken(refreshToken);
-        String createdAccessToken = jwtProvider.validateRefreshToken(getRefreshToken);
-
-        if (createdAccessToken == null) {
-            throw new CustomException(ErrorStatus.JWT_EXPIRED);
-        }
-
-        return createdAccessToken;
-    }
 
     // 회원가입
     public MemberResponseDto signUp(@Valid JoinRequestDto joinRequest) throws CustomException {
@@ -76,6 +46,10 @@ public class UserService {
         // 전화번호
         if (userRepository.findByPhoneNum(phoneNum).isPresent()) {
             throw new CustomException(ErrorStatus.USER_PHONE_IS_USED);
+        }
+
+        if (password.equals(joinRequest.getPassword2())) {
+            throw new CustomException(ErrorStatus.PASSWORD_NOT_MATCHED);
         }
 
         RoleType role = RoleType.USER;
@@ -104,7 +78,7 @@ public class UserService {
 
         CustomUserInfoDto userInfoDto = new CustomUserInfoDto(member.getId(), member.getLoginId(), member.getRoles());
         TokenResponseDto tokenDto = jwtProvider.createTokenByLogin(userInfoDto);
-        saveRefreshToken(tokenDto);
+        //saveRefreshToken(tokenDto);
         return new LoginResponseDto(member,tokenDto);
     }
 
@@ -114,4 +88,8 @@ public class UserService {
         MemberResponseDto memberResponse = new MemberResponseDto(user);
         return memberResponse;
     }
+
+    // 비밀번호 재설정
+    // 회원 탈퇴
+    // 전화번호 인증
 }
