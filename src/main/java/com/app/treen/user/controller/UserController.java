@@ -42,4 +42,12 @@ public class UserController {
 
 
     // 회원탈퇴
+
+    // 핸드폰 인증
+
+    // 카카오 로그인
+
+    // 비밀번호 재설정
+
+
 }

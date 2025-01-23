@@ -23,7 +23,7 @@ public class MessageController {
 
     private final MessageService messageService;
     //private final SimpMessagingTemplate template;
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
 
     // 메시지 송신 및 수신
@@ -35,9 +35,9 @@ public class MessageController {
             try {
                 // 메시지를 Redis 채널로 퍼블리시
                 String publishMessage = new ObjectMapper().writeValueAsString(messageRequest);
-                redisTemplate.convertAndSend("chatroom:" + messageRequest.getRoomId(), publishMessage);
+                redisTemplate.convertAndSend("chatroom/" + messageRequest.getRoomId(), publishMessage);
 
-                log.info("Message published to Redis channel: {}", "chatroom:" + messageRequest.getRoomId());
+                log.info("Message published to Redis channel: {}", "chatroom/" + messageRequest.getRoomId());
 
                 // 응답 반환
                 return Mono.just(ResponseEntity.ok().build());
