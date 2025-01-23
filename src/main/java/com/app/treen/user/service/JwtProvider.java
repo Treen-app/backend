@@ -1,5 +1,8 @@
 package com.app.treen.user.service;
 
+import com.app.treen.common.response.code.status.ErrorStatus;
+import com.app.treen.common.response.exception.CustomException;
+import com.app.treen.jpa.repository.RefreshTokenRepository;
 import com.app.treen.user.dto.request.CustomUserInfoDto;
 import com.app.treen.user.dto.response.TokenResponseDto;
 import com.app.treen.user.entity.RefreshToken;
@@ -8,6 +11,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +41,8 @@ public class JwtProvider {
     public static final Long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
     private static final Set<String> blacklistedTokens = new HashSet<>();
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
 
     @Value("${jwt.secret.key}")
@@ -230,6 +236,33 @@ public class JwtProvider {
         return null;
     }
 
+
+    @Transactional
+    public void saveRefreshToken(TokenResponseDto tokenDto) {
+        RefreshToken refreshToken = RefreshToken.builder().keyUserId(tokenDto.getKey()).refreshToken(tokenDto.getRefreshToken()).build();
+        String userId = refreshToken.getKeyUserId();
+
+        if (refreshTokenRepository.existsByKeyUserId(userId)) {
+            refreshTokenRepository.deleteByKeyUserId(userId);
+        }
+        refreshTokenRepository.save(refreshToken);
+    }
+
+    public RefreshToken getRefreshToken(String refreshToken) {
+        return refreshTokenRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new CustomException(ErrorStatus.JWT_INVALID));
+    }
+
+    public String validateRefreshToken(String refreshToken) {
+        RefreshToken getRefreshToken = getRefreshToken(refreshToken);
+        String createdAccessToken = validateRefreshToken(getRefreshToken);
+
+        if (createdAccessToken == null) {
+            throw new CustomException(ErrorStatus.JWT_EXPIRED);
+        }
+
+        return createdAccessToken;
+    }
 
 
 }

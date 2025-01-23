@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public class TradeProductResponseDto {
 
     private Long writerId;
 
-    public TradeProductResponseDto(TradeProduct tradeProduct, List<TradeRegion> regions, User user) {
+    public TradeProductResponseDto(TradeProduct tradeProduct, List<TradeRegion> regions, List<TradePImg> images,List<WishCategory> wishCategories,User user) {
         this.id = tradeProduct.getId();
         this.name = tradeProduct.getName();
         this.usedTerm = tradeProduct.getUsedTerm();
@@ -56,15 +57,24 @@ public class TradeProductResponseDto {
         this.likedCount = tradeProduct.getLikedCount();
         this.wishSize = tradeProduct.getWishSize();
         this.wishColor = tradeProduct.getWishColor();
-        this.imageUrls = tradeProduct.getImages().stream()
+        this.imageUrls = images.stream()
                 .map(TradePImg::getImgUrl)
                 .collect(Collectors.toList());
-        this.wishCategories = tradeProduct.getWishCategories().stream()
-                .map(wishCategory -> wishCategory.getCategory().getName())
-                .collect(Collectors.toList());
-        this.regions = regions.stream()
-                .map(tradeRegion -> tradeRegion.getRegion().getName())
-                .collect(Collectors.toList());
+        if (wishCategories != null) {
+            this.wishCategories = wishCategories.stream()
+                    .map(wishCategory -> wishCategory.getCategory().getName())
+                    .collect(Collectors.toList());
+        } else {
+            this.wishCategories = Collections.emptyList(); // 빈 리스트로 초기화
+        }
+
+        if (regions != null) {
+            this.regions = regions.stream()
+                    .map(tradeRegion -> tradeRegion.getRegion().getName())
+                    .collect(Collectors.toList());
+        } else {
+            this.regions = Collections.emptyList(); // 빈 리스트로 초기화
+        }
         this.status = tradeProduct.getTransactionStatus();
         this.tradeType = tradeProduct.getTradeType();
 

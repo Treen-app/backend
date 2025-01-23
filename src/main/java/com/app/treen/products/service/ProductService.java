@@ -2,13 +2,11 @@ package com.app.treen.products.service;
 
 import com.app.treen.common.config.S3Uploader;
 import com.app.treen.common.response.code.status.ErrorStatus;
+import com.app.treen.common.response.exception.CustomException;
 import com.app.treen.jpa.repository.products.*;
 import com.app.treen.products.dto.ProductQueryHelper;
 import com.app.treen.products.dto.TradeQueryHelper;
-import com.app.treen.products.dto.request.TradeProductSaveDto;
-import com.app.treen.products.dto.request.TradeProductUpdateDto;
-import com.app.treen.products.dto.request.TransProductSaveDto;
-import com.app.treen.products.dto.request.TransProductUpdateDto;
+import com.app.treen.products.dto.request.*;
 import com.app.treen.products.dto.response.TradeProductResponseDto;
 import com.app.treen.products.dto.response.TradeResponseListDto;
 import com.app.treen.products.dto.response.TransProductResponseDto;
@@ -29,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -58,87 +57,112 @@ public class ProductService {
 
     // 1 . 상품 거래 등록
     @Transactional
-    public TransProductResponseDto saveTransProduct(TransProductSaveDto dto, List<MultipartFile> files, User user) throws IOException {
-        // S3에 파일 업로드
-        List<String> uploadedUrls = s3Uploader.upload(files, "trans-product-images");
-        dto.setImageUrls(uploadedUrls);
+    public TransProductResponseDto saveTransProduct(TransactionRequestDto dto, List<MultipartFile> files, User user) throws IOException {
+        TransProductSaveDto transProductDto = dto.getProductRequest();
+        TransImgRequestDto transImgRequestDto = dto.getImageRequest();
+        TransRegionRequestDto regionRequestDto = dto.getRegionRequest();
 
         // Category 조회
-        Category category = categoryRepository.findById(dto.getCategoryId())
+        Category category = categoryRepository.findById(transProductDto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
 
         // TransProduct 저장
-        TransProduct transProduct = transProductRepository.save(dto.toEntity(user, category));
+        TransProduct transProduct = transProductRepository.save(transProductDto.toEntity(user, category));
+        tradeProductRepository.flush();
+        if (transProduct.getId() == null) {
+            throw new IllegalStateException("TradeProduct 저장 후 ID가 생성되지 않았습니다.");
+        }
+
+        // S3에 파일 업로드 개수 검증
+        if (files == null || files.isEmpty()) {
+            throw new CustomException(ErrorStatus.IMAGE_MUST_BE_UPLOADED);
+        } else if (files.size() > 5) {
+            throw new CustomException(ErrorStatus.IMAGE_OVER_UPLOADED);
+        }
+
+        List<String> uploadedUrls = s3Uploader.upload(files, "trans-product-images");
 
         // 이미지 저장
-        List<TransPImg> images = dto.toImageEntities(transProduct);
+        List<TransPImg> images = transImgRequestDto.toImageEntities(transProduct,uploadedUrls);
         transPImgRepository.saveAll(images);
 
         // Region 리스트 조회
-        List<Region> regions = regionRepository.findAllById(dto.getRegionIds());
+        List<Region> regions = regionRepository.findAllById(regionRequestDto.getRegionIds());
 
-        // regions가 비어있으면 null로 처리
-        List<TransRegion> transRegions = null;
-        if (regions.isEmpty()) {
-            // null을 저장
-            transRegionRepository.saveAll(Collections.singletonList(null)); // null 저장 예시
-        } else {
-            // TransRegion 객체 생성
-            transRegions = dto.toRegionEntities(transProduct, regions);
-
-            // TransRegion 저장
+        // TransRegion 저장 (regions가 비어있지 않은 경우에만 저장)
+        List<TransRegion> transRegions = (regions.isEmpty()) ? null : regionRequestDto.toRegionEntities(transProduct, regions);
+        if (transRegions != null) {
             transRegionRepository.saveAll(transRegions);
         }
 
-        return new TransProductResponseDto(transProduct, transRegions, user);
+        return new TransProductResponseDto(transProduct, transRegions, images,user);
 
     }
+
 
     // 2. 상품 교환 등록
     @Transactional
-    public TradeProductResponseDto saveTradeProduct(TradeProductSaveDto dto, List<MultipartFile> files, User user) throws IOException {
-        // 1. S3에 파일 업로드 및 URL 변환
-        List<String> storedFiles = s3Uploader.upload(files, "trade-product-images");
-        dto.setImageUrls(storedFiles);
+    public TradeProductResponseDto saveTradeProduct(TradeRequestDto dto, List<MultipartFile> files, User user) throws IOException {
+        TradeProductSaveDto tradeProductDto = dto.getTradeProduct();
+        ImgRequestDto tradeImgRequestDto = dto.getImgRequest();
+        RegionRequestDto regionRequestDto = dto.getRegionRequest();
+        WishCategoryRequestDto wishCategoryRequestDto = dto.getWishCategoryRequest();
 
-        // 2. Category 조회
-        Category category = categoryRepository.findById(dto.getCategoryId())
+        // Category 조회
+        Category category = categoryRepository.findById(tradeProductDto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
 
-        // 3. TradeProduct 저장
-        TradeProduct tradeProduct = tradeProductRepository.save(dto.toEntity(user, category));
+        // TradeProduct 저장
+        TradeProduct tradeProduct = tradeProductRepository.save(tradeProductDto.toEntity(user, category));
+        tradeProductRepository.flush();
 
-        // 4. 이미지 저장
-        List<TradePImg> images = dto.toImageEntities(tradeProduct);
-        tradePImgRepository.saveAll(images);
-
-        // 5. 희망 카테고리 저장
-        if (dto.getWishCategoryIds() != null && !dto.getWishCategoryIds().isEmpty()) {
-            List<Category> wishCategories = categoryRepository.findAllById(dto.getWishCategoryIds());
-            List<WishCategory> wishCategoryEntities = dto.toWishCategoryEntities(tradeProduct, wishCategories);
-            wishCategoryRepository.saveAll(wishCategoryEntities);
+        if (tradeProduct.getId() == null) {
+            throw new IllegalStateException("TradeProduct 저장 후 ID가 생성되지 않았습니다.");
         }
 
-        // 6. 지역 정보 저장
-        List<TradeRegion> tradeRegions = new ArrayList<>();
-        List<Region> regions = new ArrayList<>();
-        if (dto.getRegionIds() != null && !dto.getRegionIds().isEmpty()) {
-            regions = regionRepository.findAllById(dto.getRegionIds());
+        // S3 파일 업로드 개수 검증 (검증 후 업로드 진행)
+        if (files == null || files.isEmpty()) {
+            throw new CustomException(ErrorStatus.IMAGE_MUST_BE_UPLOADED);
+        } else if (files.size() > 5) {
+            throw new CustomException(ErrorStatus.IMAGE_OVER_UPLOADED);
+        }
 
-            // regions가 비어있지 않으면 TransRegion 생성
+        // S3에 파일 업로드 및 URL 변환
+        List<String> uploadedUrls = s3Uploader.upload(files, "trade-product-images");
+        tradeImgRequestDto.toImageEntities(tradeProduct,uploadedUrls);
+
+        // 이미지 저장
+        List<TradePImg> images = tradeImgRequestDto.toImageEntities(tradeProduct, uploadedUrls);
+        tradePImgRepository.saveAll(images);
+        List<Long> wishCategoryIds = wishCategoryRequestDto.getWishCategoryIds();
+
+        List<WishCategory> wishCategoryEntities = new ArrayList<>();
+        // 교환 타입에 따라 설정
+        if (tradeProductDto.getTradeType() == TradeType.ANYTHING){
+            if (wishCategoryIds != null && !wishCategoryIds.isEmpty()) {
+                List<Category> wishCategories = categoryRepository.findAllById(wishCategoryIds);
+                wishCategoryEntities = wishCategoryRequestDto.toWishCategoryEntities(tradeProduct, wishCategories);
+                wishCategoryRepository.saveAll(wishCategoryEntities);
+            }
+
+        }
+
+        // 지역 정보 저장
+        List<TradeRegion> tradeRegions = new ArrayList<>();
+        if (regionRequestDto.getRegionIds() != null && !regionRequestDto.getRegionIds().isEmpty()) {
+            List<Region> regions = regionRepository.findAllById(regionRequestDto.getRegionIds());
+
+            // regions가 비어있지 않으면 TradeRegion 생성 후 저장
             if (!regions.isEmpty()) {
-                tradeRegions = dto.toRegionEntities(tradeProduct, regions);
+                tradeRegions = regionRequestDto.toRegionEntities(tradeProduct, regions);
                 tradeRegionRepository.saveAll(tradeRegions);
             }
-        } else {
-            // 만약 dto.getRegionIds()가 null이거나 비어 있으면, tradeRegions를 null로 설정하거나 적절한 값으로 처리
-            tradeRegions = null; // 또는 빈 리스트를 설정: tradeRegions = new ArrayList<>();
         }
 
-        // 7. 응답 DTO 생성 및 반환
-        return new TradeProductResponseDto(tradeProduct, tradeRegions, user);
-
+        // 응답 DTO 생성 및 반환
+        return new TradeProductResponseDto(tradeProduct, tradeRegions, images,wishCategoryEntities, user);
     }
+
 
     // 3. 거래 상품 수정
     @Transactional
@@ -170,8 +194,7 @@ public class ProductService {
                 dto.getUsedRank(),
                 dto.getPoint(),
                 dto.getMethod(),
-                category,
-                dto.getImageUrls()
+                category
         );
 
         transProductRepository.save(existingProduct);
@@ -234,12 +257,14 @@ public class ProductService {
     public TransProductResponseDto findTransProductById(Long id) {
         // 거래 상품 조회
         TransProduct selectedProduct = transProductRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(ErrorStatus.PRODUCT_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new CustomException(ErrorStatus.PRODUCT_NOT_FOUND));
         List<TransRegion> transRegions = transRegionRepository.findByTransProduct(selectedProduct);
+        // 이미지 조회
+        List<TransPImg> transPImgs = transPImgRepository.findByTransProduct(selectedProduct);
         // 상품에 연결된 유저 정보 조회
         User user = transProductRepository.findUserById(id);
         // DTO 생성 및 반환
-        return new TransProductResponseDto(selectedProduct, transRegions, user);
+        return new TransProductResponseDto(selectedProduct, transRegions,transPImgs,user);
     }
 
     // 8. 교환상품 상세 조회
@@ -247,16 +272,22 @@ public class ProductService {
     public TradeProductResponseDto findTradeProductById(Long id) {
         // 교환 상품 조회
         TradeProduct selectedProduct = tradeProductRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(ErrorStatus.PRODUCT_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new CustomException(ErrorStatus.PRODUCT_NOT_FOUND));
 
         // 연결된 지역 정보 조회
         List<TradeRegion> regions = tradeRegionRepository.findByTradeProduct(selectedProduct);
+
+        // 희망 카테고리 조회
+        List<WishCategory> wishCategories = wishCategoryRepository.findAllByTradeProduct(selectedProduct);
+
+        // 이미지 조회
+        List<TradePImg> tradePImgs = tradePImgRepository.findAllByTradeProduct(selectedProduct);
 
         // 상품에 연결된 유저 정보 조회
         User user = selectedProduct.getUser();
 
         // DTO 생성 및 반환
-        return new TradeProductResponseDto(selectedProduct, regions, user);
+        return new TradeProductResponseDto(selectedProduct, regions, tradePImgs, wishCategories,user);
     }
 
 
@@ -277,20 +308,23 @@ public class ProductService {
         // 정렬 조건 생성
         OrderSpecifier<?> orderSpecifier = ProductQueryHelper.getOrderSpecifier(condition, trans);
 
-        // 쿼리 실행 및 결과 반환
-        return queryFactory.select(
-                        Projections.constructor(
-                                TransResponseListDto.class,
-                                trans.id,
-                                trans.name,
-                                trans.point
-                        ))
-                .from(trans)
+        // ✅ TransProduct 리스트 조회
+        List<TransProduct> products = queryFactory
+                .selectFrom(trans)
                 .where(filterBuilder)
                 .orderBy(orderSpecifier)
                 .offset((long) page * size)
                 .limit(size)
                 .fetch();
+
+        // ✅ 각 상품에 대해 대표 이미지 조회
+        return products.stream().map(product -> {
+            TransPImg mainImage = (TransPImg) transPImgRepository
+                    .findFirstByTransProductAndIsMainTrue(product)
+                    .orElse(null); // 대표 이미지가 없으면 null
+
+            return new TransResponseListDto(product, mainImage);
+        }).collect(Collectors.toList());
     }
 
 
@@ -313,22 +347,23 @@ public class ProductService {
         // 정렬 조건 생성
         OrderSpecifier<?> orderSpecifier = TradeQueryHelper.getOrderSpecifier(trade);
 
-        // 쿼리 실행 및 결과 반환
-        return queryFactory.select(
-                        Projections.constructor(
-                                TradeResponseListDto.class,
-                                trade.id,
-                                trade.name
-                        ))
-                .from(trade)
+        // ✅ TradeProduct 리스트 조회
+        List<TradeProduct> products = queryFactory
+                .selectFrom(trade)
                 .where(filterBuilder)
                 .orderBy(orderSpecifier)
                 .offset((long) page * size)
                 .limit(size)
                 .fetch();
+
+        // ✅ 각 상품에 대해 대표 이미지 조회
+        return products.stream().map(product -> {
+            TradePImg mainImage = tradePImgRepository
+                    .findByTradeProductAndIsMainTrue(product)
+                    .orElse(null);
+            return new TradeResponseListDto(product, mainImage);
+        }).collect(Collectors.toList());
     }
-
-
     // 11. 거래 상품 좋아요 취소
     @Transactional
     public boolean increaseLikeTransaction(Long productId, User user) {
