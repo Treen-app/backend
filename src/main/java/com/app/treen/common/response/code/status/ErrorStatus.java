@@ -36,7 +36,6 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_IS_ALREADY_REGISTERED_KAKAO(HttpStatus.IM_USED, "USER4016", "이미 카카오계정으로 가입된 전화번호입니다. 카카오로 로그인해주세요."),
     USER_IS_INTEGRATED_KAKAO(HttpStatus.ACCEPTED, "USER4017", "사용자의 계정이 카카오계정과 통합되었습니다. YESOL 계정 혹은 카카오로 로그인해주세요."),
 
-
     // 관리자 관련 에러
     NOT_ADMIN(HttpStatus.UNAUTHORIZED, "ADMIN4001", "관리자의 권한이 없습니다."),
 
@@ -128,12 +127,17 @@ public enum ErrorStatus implements BaseErrorCode {
     BOARDCOMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMPLAINT4001", "신고내역을 찾지 못했습니다."),
     COMMENTCOMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "신고내역을 찾지 못했습니다."),
     PINCOMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "PIN4001", "신고내역을 찾지 못했습니다."),
+
+    // 채팅방 에러
     NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "CHATROOM4001", "채팅방을 찾지 못했습니다."),
 
     // 이미지 에러
     IMAGE_MUST_BE_UPLOADED(HttpStatus.BAD_REQUEST, "IMAGE4001", "이미지는 1장 이상 업로드해야합니다."),
     IMAGE_OVER_UPLOADED(HttpStatus.BAD_REQUEST, "IMAGE4001", "이미지는 5장까지만 업로드할 수 있습니다."),
-
+    // 상품거래 예약 에러
+    NOT_FOUND_TRANSACTIONS(HttpStatus.NOT_FOUND, "TRANSACTIONS4001", "상품거래 예약을 찾지 못했습니다."),
+    PERMISSION_DENIED_TRANSACTIONS(HttpStatus.UNAUTHORIZED, "USER4001", "타인의 예약 내역은 수정 및 삭제할 수 없습니다."),
+    SHOULD_BE_BOOKED(HttpStatus.BAD_REQUEST, "TRANSACTIONS400", "판매완료 및 예약 전 상품은 예약 취소할 수 없습니다."),
 
     // 상품 에러
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT4001", "상품을 찾을 수 없습니다."),
