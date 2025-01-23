@@ -131,4 +131,15 @@ public class TransProduct extends BaseTimeEntity {
         }
     }
 
+    public void bookTransaction() {
+        this.transactionStatus = Status.BOOKED;
+    }
+
+    public void cancelTransaction() {
+        this.transactionStatus = Status.BEFORE;
+    }
+
+    public void completeTransaction() {
+        this.transactionStatus = Status.COMPLETED;
+    }
 }
