@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Getter
-@Table(name = "trade_product_img")
+@Table(name = "trans_product_img")
 public class TransPImg {
 
     @Id
@@ -27,7 +27,7 @@ public class TransPImg {
     @Column(name = "img_url", nullable = false)
     private String imgUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "trans_product_id")
     private TransProduct transProduct;
 

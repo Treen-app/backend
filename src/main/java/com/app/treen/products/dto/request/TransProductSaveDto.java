@@ -1,6 +1,7 @@
 package com.app.treen.products.dto.request;
 
-import com.app.treen.products.entity.*;
+import com.app.treen.products.entity.Category;
+import com.app.treen.products.entity.TransProduct;
 import com.app.treen.products.entity.enumeration.Gender;
 import com.app.treen.products.entity.enumeration.Method;
 import com.app.treen.products.entity.enumeration.Size;
@@ -9,7 +10,8 @@ import com.app.treen.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -25,12 +27,7 @@ public class TransProductSaveDto {
     private Long point;
     private Gender gender;
     private Long categoryId;
-    private List<String> imageUrls = new ArrayList<>();
-    private List<Long> regionIds = new ArrayList<>();
 
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
-    }
 
     public TransProduct toEntity(User user, Category category) {
         return TransProduct.builder()
@@ -47,28 +44,22 @@ public class TransProductSaveDto {
                 .build();
     }
 
-    public List<TransPImg> toImageEntities(TransProduct transProduct) {
-        List<TransPImg> images = new ArrayList<>();
-        for (int i = 0; i < imageUrls.size(); i++) {
-            images.add(TransPImg.builder()
-                    .transProduct(transProduct)
-                    .imgUrl(imageUrls.get(i))
-                    .sortOrder(i)
-                    .isMain(i == 0) // 첫 번째 이미지를 대표 이미지로 설정
-                    .build());
-        }
-        return images;
-    }
 
-    public List<TransRegion> toRegionEntities(TransProduct transProduct, List<Region> regions) {
-        List<TransRegion> transRegions = new ArrayList<>();
-        for (Region region : regions) {
-            transRegions.add(TransRegion.builder()
-                    .transProduct(transProduct)
-                    .region(region)
-                    .build());
-        }
-        return transRegions;
-    }
+    public static String formatRelativeTime(LocalDateTime createdDate) {
+        Duration duration = Duration.between(createdDate, LocalDateTime.now());
+        long seconds = duration.getSeconds();
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
 
+        if (seconds < 60) {
+            return seconds + "초 전";
+        } else if (minutes < 60) {
+            return minutes + "분 전";
+        } else if (hours < 24) {
+            return hours + "시간 전";
+        } else {
+            return days + "일 전";
+        }
+    }
 }

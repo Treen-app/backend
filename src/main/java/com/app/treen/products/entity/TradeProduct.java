@@ -67,12 +67,6 @@ public class TradeProduct extends BaseTimeEntity {
     @Column(name = "liked_count", nullable = false)
     private Long likedCount = 0L;
 
-    @OneToMany(mappedBy = "tradeProduct", cascade = CascadeType.ALL)
-    private List<TradePImg> images;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "tradeProduct", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WishCategory> wishCategories = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "trade_type", nullable = false)
@@ -96,24 +90,7 @@ public class TradeProduct extends BaseTimeEntity {
         this.wishSize = dto.getWishSize();
         this.tradeType = dto.getTradeType();
         this.category = category;
-        // 이미지 업데이트
-        updateImages(dto.getImageUrls());
     }
-
-    private void updateImages(List<String> imageUrls) {
-        this.images.clear();
-
-        // 새로운 이미지 목록 추가
-        for (int i = 0; i < imageUrls.size(); i++) {
-            this.images.add(TradePImg.builder()
-                    .tradeProduct(this)
-                    .imgUrl(imageUrls.get(i))
-                    .sortOrder(i)
-                    .isMain(i == 0) // 첫 번째 이미지를 대표 이미지로 설정
-                    .build());
-        }
-    }
-
 
 
 

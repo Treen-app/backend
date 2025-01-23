@@ -131,6 +131,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 채팅방 에러
     NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "CHATROOM4001", "채팅방을 찾지 못했습니다."),
 
+    // 이미지 에러
+    IMAGE_MUST_BE_UPLOADED(HttpStatus.BAD_REQUEST, "IMAGE4001", "이미지는 1장 이상 업로드해야합니다."),
+    IMAGE_OVER_UPLOADED(HttpStatus.BAD_REQUEST, "IMAGE4001", "이미지는 5장까지만 업로드할 수 있습니다."),
     // 상품거래 예약 에러
     NOT_FOUND_TRANSACTIONS(HttpStatus.NOT_FOUND, "TRANSACTIONS4001", "상품거래 예약을 찾지 못했습니다."),
     PERMISSION_DENIED_TRANSACTIONS(HttpStatus.UNAUTHORIZED, "USER4001", "타인의 예약 내역은 수정 및 삭제할 수 없습니다."),
