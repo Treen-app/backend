@@ -3,13 +3,12 @@ package com.app.treen.user.service;
 import com.app.treen.common.response.code.status.ErrorStatus;
 import com.app.treen.common.response.exception.CustomException;
 import com.app.treen.jpa.repository.user.UserRepository;
-import com.app.treen.user.dto.request.CustomUserInfoDto;
-import com.app.treen.user.dto.request.JoinRequestDto;
-import com.app.treen.user.dto.request.LoginRequestDto;
+import com.app.treen.user.dto.request.*;
 import com.app.treen.user.dto.response.LoginResponseDto;
 import com.app.treen.user.dto.response.MemberResponseDto;
 import com.app.treen.user.dto.response.TokenResponseDto;
 import com.app.treen.user.entity.RoleType;
+import com.app.treen.user.entity.SmsCertificationDao;
 import com.app.treen.user.entity.User;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -24,6 +23,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+
+    private final SmsCertificationUtil smsUtil;
+    private final SmsCertificationDao smsCertificationDao;
+
 
 
     // 회원가입
@@ -90,6 +93,29 @@ public class UserService {
     }
 
     // 비밀번호 재설정
-    // 회원 탈퇴
     // 전화번호 인증
+
+    // 회원 탈퇴
+
+    // 전화번호 인증
+    public void sendSms(smsCertificationDto.SmsCertificationRequest requestDto) {
+        String to = requestDto.getPhone();
+        int randomNumber = (int)(Math.random() * 9000) + 1000;
+        String certificationNumber = String.valueOf(randomNumber);
+        smsUtil.sendSms(to, certificationNumber);
+        smsCertificationDao.createSmsCertification(to,certificationNumber);
+    }
+
+
+    public void verifySms(smsCertificationDto.SmsCertificationRequest requestDto) {
+        if (isVerify(requestDto)) {
+            throw new CustomException(ErrorStatus.CERTIFICATION_NUMBER_NOT_MATCHED);
+        }
+    }
+
+    public boolean isVerify(smsCertificationDto.SmsCertificationRequest request) {
+        return !(smsCertificationDao.hasKey(request.getPhone()) &&
+                smsCertificationDao.getSmsCertification(request.getPhone())
+                        .equals(request.getCertificationNumber()));
+    }
 }

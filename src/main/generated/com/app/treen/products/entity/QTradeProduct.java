@@ -35,8 +35,6 @@ public class QTradeProduct extends EntityPathBase<TradeProduct> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final ListPath<TradePImg, QTradePImg> images = this.<TradePImg, QTradePImg>createList("images", TradePImg.class, QTradePImg.class, PathInits.DIRECT2);
-
     public final NumberPath<Long> likedCount = createNumber("likedCount", Long.class);
 
     public final EnumPath<com.app.treen.products.entity.enumeration.Method> method = createEnum("method", com.app.treen.products.entity.enumeration.Method.class);
@@ -59,8 +57,6 @@ public class QTradeProduct extends EntityPathBase<TradeProduct> {
     public final com.app.treen.user.entity.QUser user;
 
     public final NumberPath<Long> viewCount = createNumber("viewCount", Long.class);
-
-    public final ListPath<WishCategory, QWishCategory> wishCategories = this.<WishCategory, QWishCategory>createList("wishCategories", WishCategory.class, QWishCategory.class, PathInits.DIRECT2);
 
     public final StringPath wishColor = createString("wishColor");
 

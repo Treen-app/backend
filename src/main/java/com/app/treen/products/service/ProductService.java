@@ -15,6 +15,7 @@ import com.app.treen.products.entity.*;
 import com.app.treen.products.entity.enumeration.TradeType;
 import com.app.treen.user.entity.User;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.app.treen.products.entity.QTradePImg.tradePImg;
 
 @RequiredArgsConstructor
 @Service
@@ -53,7 +56,7 @@ public class ProductService {
     private final TransLikesRepository transLikesRepository;
     private final TradeLikesRepository tradeLikesRepository;
 
-    private JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
     // 1 . 상품 거래 등록
     @Transactional
@@ -308,7 +311,6 @@ public class ProductService {
         // 정렬 조건 생성
         OrderSpecifier<?> orderSpecifier = ProductQueryHelper.getOrderSpecifier(condition, trans);
 
-        // ✅ TransProduct 리스트 조회
         List<TransProduct> products = queryFactory
                 .selectFrom(trans)
                 .where(filterBuilder)
@@ -317,7 +319,6 @@ public class ProductService {
                 .limit(size)
                 .fetch();
 
-        // ✅ 각 상품에 대해 대표 이미지 조회
         return products.stream().map(product -> {
             TransPImg mainImage = (TransPImg) transPImgRepository
                     .findFirstByTransProductAndIsMainTrue(product)
@@ -328,12 +329,12 @@ public class ProductService {
     }
 
 
-    // 10. 교환상품 검색 및 필터링
+
     public List<TradeResponseListDto> getFilteredTradeResults(
             TradeQueryHelper.Condition condition,
             Long category,
             String keyword,
-            Long wishCategory,
+            List<Long> wishCategoryIds,
             TradeType tradeType,
             int page,
             int size
@@ -342,28 +343,31 @@ public class ProductService {
 
         // 필터링 조건 생성
         BooleanBuilder filterBuilder = TradeQueryHelper.createFilterBuilder(
-                condition, category, keyword, wishCategory, tradeType, trade);
+                condition, category, keyword, wishCategoryIds, tradeType, trade
+        );
 
         // 정렬 조건 생성
         OrderSpecifier<?> orderSpecifier = TradeQueryHelper.getOrderSpecifier(trade);
 
-        // ✅ TradeProduct 리스트 조회
-        List<TradeProduct> products = queryFactory
-                .selectFrom(trade)
+        List<Tuple> tuples = queryFactory
+                .select(trade, tradePImg)
+                .from(trade)
+                .leftJoin(tradePImg).on(tradePImg.tradeProduct.id.eq(trade.id).and(tradePImg.isMain.eq(true)))
                 .where(filterBuilder)
                 .orderBy(orderSpecifier)
                 .offset((long) page * size)
                 .limit(size)
+                .distinct()
                 .fetch();
 
-        // ✅ 각 상품에 대해 대표 이미지 조회
-        return products.stream().map(product -> {
-            TradePImg mainImage = tradePImgRepository
-                    .findByTradeProductAndIsMainTrue(product)
-                    .orElse(null);
+        // TradeProduct와 TradePImg를 TradeResponseListDto로 매핑
+        return tuples.stream().map(tuple -> {
+            TradeProduct product = tuple.get(trade);
+            TradePImg mainImage = tuple.get(tradePImg);
             return new TradeResponseListDto(product, mainImage);
         }).collect(Collectors.toList());
     }
+
     // 11. 거래 상품 좋아요 취소
     @Transactional
     public boolean increaseLikeTransaction(Long productId, User user) {

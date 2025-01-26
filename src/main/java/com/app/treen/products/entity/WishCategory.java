@@ -26,4 +26,8 @@ public class WishCategory {
     @JoinColumn(name = "trade_product_id")
     private TradeProduct tradeProduct;
 
+    public void setTradeProduct(TradeProduct tradeProduct) {
+        this.tradeProduct = tradeProduct;
+    }
+
 }

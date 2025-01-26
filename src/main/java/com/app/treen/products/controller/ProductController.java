@@ -46,7 +46,7 @@ public class ProductController {
     @PostMapping(value = "/trade/save", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<TradeProductResponseDto> saveTradeProduct(
             @RequestPart("images") List<MultipartFile> images,
-            @RequestPart("product") TradeProductSaveDto requestDto,
+            @RequestPart("product") TradeRequestDto requestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) throws IOException {
         TradeProductResponseDto responseDto = productService.saveTradeProduct(requestDto,images, userDetails.getUser());
@@ -125,12 +125,12 @@ public class ProductController {
             @RequestParam(required = false) TradeQueryHelper.Condition condition,   // 거래 조건 (최신순, 인기순 등)
             @RequestParam(required = false) Long category,                         // 카테고리
             @RequestParam(required = false) String keyword,                        // 검색어
-            @RequestParam(required = false) Long wishCategory,                     // 희망 카테고리
+            @RequestParam(required = false) List<Long> wishCategoryList,                     // 희망 카테고리
             @RequestParam(required = false) TradeType tradeType,                   // 거래 타입 (교환, 판매)
             @RequestParam(defaultValue = "0") int page,                            // 페이지 번호
             @RequestParam(defaultValue = "10") int size                            // 페이지 크기
     ) {
-        List<TradeResponseListDto> listDto = productService.getFilteredTradeResults(condition, category, keyword, wishCategory, tradeType, page, size);
+        List<TradeResponseListDto> listDto = productService.getFilteredTradeResults(condition, category, keyword, wishCategoryList, tradeType, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(listDto);
     }
 

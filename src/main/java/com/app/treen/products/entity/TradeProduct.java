@@ -7,9 +7,6 @@ import com.app.treen.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -76,6 +73,7 @@ public class TradeProduct extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_status")
     Status transactionStatus = Status.BEFORE;
+
 
     public void updateDetail(TradeProductUpdateDto dto, Category category) {
         // DTO에서 받은 값으로 기존 제품의 필드를 업데이트합니다.
