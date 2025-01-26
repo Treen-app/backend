@@ -22,10 +22,6 @@ public class RegionRequestDto {
         if (tradeProduct == null) {
             throw new IllegalArgumentException("TradeProduct cannot be null");
         }
-        if (regions == null || regions.isEmpty()) {
-            throw new IllegalArgumentException("Regions cannot be null or empty");
-        }
-
         List<TradeRegion> tradeRegions = new ArrayList<>();
         for (Region region : regions) {
             tradeRegions.add(TradeRegion.builder()
