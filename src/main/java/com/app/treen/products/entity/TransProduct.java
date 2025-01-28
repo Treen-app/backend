@@ -104,4 +104,16 @@ public class TransProduct extends BaseTimeEntity {
         this.method = method;
         this.category = category;
     }
+
+    public void bookTransaction() {
+        this.transactionStatus = Status.BOOKED;
+    }
+
+    public void cancelTransaction() {
+        this.transactionStatus = Status.BEFORE;
+    }
+
+    public void completeTransaction() {
+        this.transactionStatus = Status.COMPLETED;
+    }
 }
