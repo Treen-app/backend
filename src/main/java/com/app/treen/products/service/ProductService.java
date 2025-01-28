@@ -349,10 +349,8 @@ public class ProductService {
         // 정렬 조건 생성
         OrderSpecifier<?> orderSpecifier = TradeQueryHelper.getOrderSpecifier(trade);
 
-        List<Tuple> tuples = queryFactory
-                .select(trade, tradePImg)
-                .from(trade)
-                .leftJoin(tradePImg).on(tradePImg.tradeProduct.id.eq(trade.id).and(tradePImg.isMain.eq(true)))
+        List<TradeProduct> products = queryFactory
+                .selectFrom(trade)
                 .where(filterBuilder)
                 .orderBy(orderSpecifier)
                 .offset((long) page * size)
@@ -360,10 +358,10 @@ public class ProductService {
                 .distinct()
                 .fetch();
 
-        // TradeProduct와 TradePImg를 TradeResponseListDto로 매핑
-        return tuples.stream().map(tuple -> {
-            TradeProduct product = tuple.get(trade);
-            TradePImg mainImage = tuple.get(tradePImg);
+        return products.stream().map(product -> {
+            TradePImg mainImage = tradePImgRepository
+                    .findByTradeProductAndIsMainTrue(product)
+                    .orElse(null);
             return new TradeResponseListDto(product, mainImage);
         }).collect(Collectors.toList());
     }
@@ -425,8 +423,6 @@ public class ProductService {
             return false;
         }
     }
-
-
 
 
 }
