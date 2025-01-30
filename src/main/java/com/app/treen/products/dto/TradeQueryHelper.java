@@ -80,7 +80,7 @@ public class TradeQueryHelper {
                             .from(wishCategory)
                             .where(
                                     wishCategory.id.in(wishCategoryIds)
-                                            .and(wishCategory.tradeProduct.id.eq(product.id)) // WishCategory에 tradeProduct 필드가 있다고 가정
+                                            .and(wishCategory.tradeProduct.id.eq(product.id))
                             )
                             .exists()
             );

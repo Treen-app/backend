@@ -4,6 +4,7 @@ import com.app.treen.common.response.code.status.ErrorStatus;
 import com.app.treen.common.response.exception.CustomException;
 import com.app.treen.jpa.repository.user.UserRepository;
 import com.app.treen.user.dto.request.*;
+import com.app.treen.user.dto.response.FindLoginIdResponseDto;
 import com.app.treen.user.dto.response.LoginResponseDto;
 import com.app.treen.user.dto.response.MemberResponseDto;
 import com.app.treen.user.dto.response.TokenResponseDto;
@@ -16,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -26,7 +29,6 @@ public class UserService {
 
     private final SmsCertificationUtil smsUtil;
     private final SmsCertificationDao smsCertificationDao;
-
 
 
     // 회원가입
@@ -57,7 +59,6 @@ public class UserService {
 
         RoleType role = RoleType.USER;
         User member = joinRequest.toEntity(role, password);
-
         // 기본 프로필 이미지 설정
         final String DEFAULT_PROFILE_IMAGE_URL = "https://yourdomain.com/images/default-profile.png";
         member.setProfileImgUrl(DEFAULT_PROFILE_IMAGE_URL);
@@ -93,13 +94,67 @@ public class UserService {
     }
 
     // 비밀번호 재설정
-    // 전화번호 인증
+    @Transactional
+    public void resetPassword(ResetPasswordDto requestDto) throws Exception {
+        User user = userRepository.findByLoginIdAndPhoneNum(requestDto.getLoginId(), requestDto.getPhone())
+                .orElseThrow(()->new CustomException(ErrorStatus.USER_NOT_FOUND));
+        if (user == null) {
+            throw new CustomException(ErrorStatus.USER_NOT_FOUND);
+        }
+        String tempPassword = generateTempPassword(12);
+        String encodedPassword = passwordEncoder.encode(tempPassword);
+        user.changePassword(encodedPassword);
+        userRepository.save(user);
+        smsUtil.sendRestPassword(requestDto.getPhone(), tempPassword);
+    }
+
+    // 임시 비밀번호 생성
+    private String generateTempPassword(int length) throws Exception {
+
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lower = "abcdefghijklmnopqrstuvwxyz";
+        String digits = "0123456789";
+        String special = "!@#$%^&*()-_=+[]{}|;:',.<>?/";
+        String all = upper + lower + digits + special;
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        // 각 조건을 만족하는 문자를 반드시 포함
+        password.append(upper.charAt(random.nextInt(upper.length())));
+        password.append(lower.charAt(random.nextInt(lower.length())));
+        password.append(digits.charAt(random.nextInt(digits.length())));
+        password.append(special.charAt(random.nextInt(special.length())));
+
+        for (int i = 4; i < length; i++) {
+            password.append(all.charAt(random.nextInt(all.length())));
+        }
+
+        // 문자열을 섞어서 랜덤화
+        char[] pwdArray = password.toString().toCharArray();
+        for (int i = pwdArray.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+            char temp = pwdArray[index];
+            pwdArray[index] = pwdArray[i];
+            pwdArray[i] = temp;
+        }
+
+        return new String(pwdArray);
+    }
 
     // 회원 탈퇴
+    @Transactional
+    public void deleteUser(User user) {
+        if (user == null) {
+            throw new CustomException(ErrorStatus.USER_NOT_FOUND);
+        }
+        user.changeStatusToDeleted();
+        userRepository.save(user);
+    }
 
     // 전화번호 인증
-    public void sendSms(smsCertificationDto.SmsCertificationRequest requestDto) {
-        String to = requestDto.getPhone();
+    public void sendSms(smsCertificationDto.CertificationNumRequest requestDto) {
+        String to = requestDto.getPhoneNum();
         int randomNumber = (int)(Math.random() * 9000) + 1000;
         String certificationNumber = String.valueOf(randomNumber);
         smsUtil.sendSms(to, certificationNumber);
@@ -118,4 +173,13 @@ public class UserService {
                 smsCertificationDao.getSmsCertification(request.getPhone())
                         .equals(request.getCertificationNumber()));
     }
+
+    public FindLoginIdResponseDto findLoginId(FindIdRequestDto requestDto) {
+        User thisUser = userRepository.findByUserNameAndPhoneNum(requestDto.getUserName(),requestDto.getPhoneNum())
+                .orElseThrow(()-> new CustomException(ErrorStatus.USER_NOT_FOUND));
+        return new FindLoginIdResponseDto(thisUser.getLoginId());
+
+    }
 }
+
+

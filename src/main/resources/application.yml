@@ -1,20 +1,19 @@
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: ${DB_URL:jdbc:mysql://localhost:3306/treen}
-#    username: ${DB_USERNAME:root}
-#    password: ${DB_PASSWORD:password}
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/treen}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
   redis:
     host: localhost
     port: 6379
   config:
     import: optional:file:.env[.properties]  # .env 파일을 직접 로드
-  datasource:
-    driver-class-name: org.h2.Driver  # H2 드라이버 사용
-    url: jdbc:h2:tcp://localhost/~/test  # 인메모리 H2 DB 사용 (테스트용)
-    username: sa      # 기본 사용자명
-    password:
+#  datasource:
+#    driver-class-name: org.h2.Driver  # H2 드라이버 사용
+#    url: jdbc:h2:tcp://localhost/~/test  # 인메모리 H2 DB 사용 (테스트용)
+#    username: sa      # 기본 사용자명
+#    password:
   jpa:
     hibernate.ddl-auto: update
     show-sql: true
