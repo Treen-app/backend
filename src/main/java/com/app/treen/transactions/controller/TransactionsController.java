@@ -34,7 +34,6 @@ public class TransactionsController {
                                                    @PathVariable("transactionsId") Long transactionsId) {
 
         transactionsService.cancelTransactions(userDetails.getUser(), transactionsId);
-        TransactionsResponseDto responseDto = transactionsService.getTransactions(transactionsId);
 
         return ResponseEntity.ok().build();
     }
