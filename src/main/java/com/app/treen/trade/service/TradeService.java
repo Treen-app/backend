@@ -6,6 +6,7 @@ import com.app.treen.jpa.repository.products.TradeProductRepository;
 import com.app.treen.jpa.repository.trade.OfferedProductRepository;
 import com.app.treen.jpa.repository.trade.TradeOfferRepository;
 import com.app.treen.products.entity.TradeProduct;
+import com.app.treen.products.entity.enumeration.Status;
 import com.app.treen.trade.dto.request.TradeOfferSaveDto;
 import com.app.treen.trade.dto.response.TradeOfferResponseDto;
 import com.app.treen.trade.entity.OfferedProduct;
@@ -60,6 +61,7 @@ public class TradeService {
                 .salesProduct(salesProduct)
                 .offeredProductList(offeredProducts)
                 .buyer(loginUser)
+                .isAccomplished(false)
                 .build();
 
         return tradeOfferRepository.save(tradeOffer).getId();
@@ -72,21 +74,48 @@ public class TradeService {
         List<TradeOfferResponseDto> tradeOfferResponseDtoList = new ArrayList<>();
 
         for (TradeOffer tradeOffer : tradeOfferList) {
-            for (OfferedProduct offeredProduct : tradeOffer.getOfferedProductList()) {
-                tradeOfferResponseDtoList.add(TradeOfferResponseDto.builder()
-                        .tradeOfferId(tradeOffer.getId())
-                        .createdDate(tradeOffer.getCreatedDate())
-                        .salesProductId(tradeOffer.getSalesProduct().getId())
-                        .salesProductName(tradeOffer.getSalesProduct().getName())
-                        .offeredProduct(TradeOfferResponseDto.OfferedProductDto.from(offeredProduct.getOfferedProduct()))
-                        .build());
+            // 성사되지 않은 거래만 목록에서 조회 가능
+            if (!tradeOffer.isAccomplished()) {
+                for (OfferedProduct offeredProduct : tradeOffer.getOfferedProductList()) {
+                    tradeOfferResponseDtoList.add(TradeOfferResponseDto.builder()
+                            .tradeOfferId(tradeOffer.getId())
+                            .createdDate(tradeOffer.getCreatedDate())
+                            .salesProductId(tradeOffer.getSalesProduct().getId())
+                            .salesProductName(tradeOffer.getSalesProduct().getName())
+                            .offeredProduct(TradeOfferResponseDto.OfferedProductDto.from(offeredProduct.getOfferedProduct()))
+                            .build());
+                }
             }
         }
 
         return tradeOfferResponseDtoList;
     }
 
-    // 자유교환 요청 취소
+    // 자유교환 (보낸)요청 취소
+    @Transactional
+    public void deleteTradeOffer(User loginUser, Long tradeOfferId) {
+
+        TradeOffer findTradeOffer = tradeOfferRepository.findById(tradeOfferId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.TRADE_NOT_FOUND));
+
+        checkAuthTrade(loginUser, findTradeOffer);
+
+        tradeOfferRepository.deleteById(tradeOfferId);
+    }
+
+    private void checkAuthTrade(User loginUser, TradeOffer tradeOffer) {
+
+        // 교환신청자만 신청 취소 가능
+        if (!tradeOffer.getBuyer().equals(loginUser)) {
+            throw new CustomException(ErrorStatus.PERMISSION_DENIED_TRADE);
+        }
+
+        // 성사된 교환요청은 삭제할 수 없음
+        if (!tradeOffer.isAccomplished()) {
+            throw new CustomException(ErrorStatus.SHOULD_NOT_BE_ACCOMPLISHED);
+        }
+
+    }
 
     // 받은 자유교환 요청 목록 조회
 

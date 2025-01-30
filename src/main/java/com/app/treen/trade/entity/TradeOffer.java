@@ -37,4 +37,6 @@ public class TradeOffer extends BaseTimeEntity { // 자유교환 신청정보
     @OneToMany(mappedBy = "tradeOffer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OfferedProduct> offeredProductList = new ArrayList<>();
 
+    private boolean isAccomplished;
+
 }

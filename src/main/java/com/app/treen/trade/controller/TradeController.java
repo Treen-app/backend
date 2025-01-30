@@ -41,7 +41,7 @@ public class TradeController {
     }
 
     // 자유교환 보낸 요청 조회
-    @GetMapping("auth/send/all")
+    @GetMapping("auth/sent/all")
     public ResponseEntity<List<TradeOfferResponseDto>> getAllTradeOfferSent(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
         List<TradeOfferResponseDto> tradeOfferResponseDtoList = tradeService.findTradeRequest(userDetails.getUser());
@@ -50,6 +50,14 @@ public class TradeController {
     }
 
     // 자유교환 요청 취소
+    @DeleteMapping("/auth/{tradeOfferId}")
+    public ResponseEntity<Void> deleteTradeOffer(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                   @PathVariable("tradeOfferId") Long tradeOfferId) {
+
+        tradeService.deleteTradeOffer(userDetails.getUser(), tradeOfferId);
+
+        return ResponseEntity.ok().build();
+    }
 
     // 받은 자유교환 요청 목록 조회
 
