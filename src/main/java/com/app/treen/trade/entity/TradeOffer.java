@@ -9,16 +9,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TradeRequest extends BaseTimeEntity { // 자유교환 신청정보
+public class TradeOffer extends BaseTimeEntity { // 자유교환 신청정보
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "trade_request_id")
+    @Column(name = "trade_offer_id")
     private Long id;
 
     // 승인상품(판매자 측 상품)
@@ -26,6 +29,12 @@ public class TradeRequest extends BaseTimeEntity { // 자유교환 신청정보
     @JoinColumn(name = "trade_product_id", nullable = false)
     private TradeProduct salesProduct;
 
+    // 교환 요청자
+    @ManyToOne
+    @JoinColumn(name = "users_id", nullable = false)
+    private User buyer;
 
+    @OneToMany(mappedBy = "tradeOffer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OfferedProduct> offeredProductList = new ArrayList<>();
 
 }

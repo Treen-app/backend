@@ -48,4 +48,9 @@ public class ChatRoom extends BaseTimeEntity {
 
         return seller;
     }
+
+    // 거래예약 생성 여부
+    public void updateReservation() {
+        this.isReserved = true;
+    }
 }

@@ -24,7 +24,8 @@ public class ChatRoomDetailResponse {
     private MemberDto buyer;
     private MemberDto seller;
     private TransProductDto transProduct;
-    private TransactionsDto transaction;
+    //private TransactionsDto transaction;
+    private boolean isReserved; // 거래 예약 여부
 
     @Data
     @Builder
@@ -87,29 +88,31 @@ public class ChatRoomDetailResponse {
         }
     }
 
-    @Data
-    @Builder
-    public static class TransactionsDto {
+//    @Data
+//    @Builder
+//    public static class TransactionsDto {
+//
+//        private Long id;
+//        private LocalDateTime transDate;
+//        private boolean isDirect;
+//        private String place;
+//        private String deliveryAddress;
+//        private String deliveryRequest;
+//        private String deliveryFeeAccount;
+//
+//        public static TransactionsDto from(Transactions transaction) {
+//            return TransactionsDto.builder()
+//                    .id(transaction.getId())
+//                    .transDate(transaction.getTransDate())
+//                    .isDirect(transaction.isDirect())
+//                    .place(transaction.getPlace())
+//                    .deliveryAddress(transaction.getDeliveryAddress())
+//                    .deliveryRequest(transaction.getDeliveryRequest())
+//                    .deliveryFeeAccount(transaction.getDeliveryFeeAccount())
+//                    .build();
+//        }
+//    }
 
-        private Long id;
-        private LocalDateTime transDate;
-        private boolean isDirect;
-        private String place;
-        private String deliveryAddress;
-        private String deliveryRequest;
-        private String deliveryFeeAccount;
 
-        public static TransactionsDto from(Transactions transaction) {
-            return TransactionsDto.builder()
-                    .id(transaction.getId())
-                    .transDate(transaction.getTransDate())
-                    .isDirect(transaction.isDirect())
-                    .place(transaction.getPlace())
-                    .deliveryAddress(transaction.getDeliveryAddress())
-                    .deliveryRequest(transaction.getDeliveryRequest())
-                    .deliveryFeeAccount(transaction.getDeliveryFeeAccount())
-                    .build();
-        }
-    }
 
 }

@@ -5,10 +5,14 @@ import com.app.treen.chat_room.dto.response.ChatRoomDetailResponse;
 import com.app.treen.chat_room.dto.response.MessageResponseDto;
 import com.app.treen.chat_room.dto.response.ChatRoomResponseDto;
 import com.app.treen.chat_room.entity.ChatRoom;
+import com.app.treen.common.response.exception.CustomException;
 import com.app.treen.jpa.repository.products.TransProductRepository;
+import com.app.treen.jpa.repository.transactions.TransactionsRepository;
 import com.app.treen.message.document.Message;
 import com.app.treen.mongo.repository.MessageRepository;
 import com.app.treen.jpa.repository.ChatRoomRepository;
+import com.app.treen.transactions.dto.response.TransactionsResponseDto;
+import com.app.treen.transactions.entity.Transactions;
 import com.app.treen.user.entity.User;
 import com.app.treen.jpa.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +34,7 @@ public class ChatRoomService {
     private final MessageRepository messageRepository;
     private final TransProductRepository transProductRepository;
     private final UserRepository userRepository;
+    private final TransactionsRepository transactionsRepository;
 
     // 채팅방 생성
     @Transactional

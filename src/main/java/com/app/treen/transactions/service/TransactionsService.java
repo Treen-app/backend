@@ -73,6 +73,8 @@ public class TransactionsService {
 
         // 상품 상태 변경
         transactions.getTransChatRoom().getTransProduct().cancelTransaction();
+        // 상품거래 예약 삭제
+        transactionsRepository.delete(transactions);
 
     }
 
