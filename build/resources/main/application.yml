@@ -26,6 +26,11 @@ spring:
       uri: ${MONGO_DB_URI}
       database: ${MONGO_DB_DATABASE}
 #    database-platform: org.hibernate.dialect.MySQL8Dialect
+  sms:
+    apiKey: ${COOLSMS_KEY}
+    apiSecret: ${COOLSMS_SECRET_KEY}
+    senderNumber: ${COOLSMS_SEND_NUMBER}
+    provider: https://api.coolsms.co.kr
 cloud:
   aws:
     s3:
@@ -40,7 +45,3 @@ jwt:
   secret:
     key: ${JWT_SECRET_KEY}
     refresh: ${JWT_REFRESH_KEY}
-coolsms:
-  apiKey: ${COOL_SMS_KEY}
-  apiSecret: ${COOL_SMS_SECRET_KEY}
-  senderNumber: ${COOL_SMS_SEND_NUMBER}

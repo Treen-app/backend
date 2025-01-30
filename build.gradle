@@ -55,6 +55,9 @@ dependencies {
 	// MySQL
 //	runtimeOnly 'com.mysql:mysql-connector-j'
 
+	// coolsms
+	implementation 'net.nurigo:sdk:4.3.0'
+
 	//H2
 	runtimeOnly 'com.h2database:h2'
 	// QueryDSL
