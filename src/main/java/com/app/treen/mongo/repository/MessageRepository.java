@@ -1,8 +1,6 @@
 package com.app.treen.mongo.repository;
 
-import com.app.treen.chat_room.entity.ChatRoom;
-import com.app.treen.message.document.Message;
-import com.app.treen.user.entity.User;
+import com.app.treen.transactions.transactions_chat.message.document.Message;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Flux;
 

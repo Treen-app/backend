@@ -25,7 +25,7 @@ public class OfferedProduct {
     // 교환상품(교환 신청자 측 상품)
     @ManyToOne
     @JoinColumn(name = "trade_product_id", nullable = false)
-    private TradeProduct offeredProduct;
+    private TradeProduct product;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "trade_offer_id", nullable = false)

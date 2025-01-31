@@ -2,10 +2,9 @@ package com.app.treen.trade.controller;
 
 import com.app.treen.products.service.ProductService;
 import com.app.treen.trade.dto.request.TradeOfferSaveDto;
-import com.app.treen.trade.dto.response.TradeOfferResponseDto;
+import com.app.treen.trade.dto.response.ReceivedTradeOfferResponseDto;
+import com.app.treen.trade.dto.response.SentTradeOfferResponseDto;
 import com.app.treen.trade.service.TradeService;
-import com.app.treen.transactions.dto.request.TransactionsSaveRequestDto;
-import com.app.treen.transactions.dto.response.TransactionsResponseDto;
 import com.app.treen.user.service.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,19 +40,41 @@ public class TradeController {
     }
 
     // 자유교환 보낸 요청 조회
-    @GetMapping("auth/send/all")
-    public ResponseEntity<List<TradeOfferResponseDto>> getAllTradeOfferSent(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    @GetMapping("auth/sent/all")
+    public ResponseEntity<List<SentTradeOfferResponseDto>> getAllTradeOfferSent(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        List<TradeOfferResponseDto> tradeOfferResponseDtoList = tradeService.findTradeRequest(userDetails.getUser());
+        List<SentTradeOfferResponseDto> tradeOfferResponseDtoList = tradeService.findSentTradeOfferList(userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(tradeOfferResponseDtoList);
     }
 
     // 자유교환 요청 취소
+    @DeleteMapping("/auth/{tradeOfferId}")
+    public ResponseEntity<Void> deleteTradeOffer(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                   @PathVariable("tradeOfferId") Long tradeOfferId) {
+
+        tradeService.deleteTradeOffer(userDetails.getUser(), tradeOfferId);
+
+        return ResponseEntity.ok().build();
+    }
 
     // 받은 자유교환 요청 목록 조회
+    @GetMapping("auth/received/all")
+    public ResponseEntity<List<ReceivedTradeOfferResponseDto>> getAllTradeOfferReceived(@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        List<ReceivedTradeOfferResponseDto> tradeOfferResponseDtoList = tradeService.findReceivedTradeOfferList(userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK).body(tradeOfferResponseDtoList);
+    }
 
     // 요청 승인 (자유교환 채팅 시작)
+    @GetMapping("/auth/approve/{tradeOfferId}")
+    public ResponseEntity<Long> getChatting(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                            @PathVariable("tradeOfferId") Long tradeOfferId) {
+        Long chatRoomId = tradeService.createChatting(userDetails.getUser(), tradeOfferId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(chatRoomId);
+    }
 
     // 자유교환 거래 예약
 
