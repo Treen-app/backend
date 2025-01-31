@@ -4,6 +4,7 @@ import com.app.treen.products.entity.enumeration.Gender;
 import com.app.treen.products.entity.enumeration.Size;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -43,13 +44,12 @@ public class User {
     private Long point = 1000L;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "member_roles", joinColumns = @JoinColumn(name = "member_id"))
     @Enumerated(EnumType.STRING)
     private List<RoleType> roles = new ArrayList<>();
 
 
-    public void changePassword(String password) {
-        this.password = password;
+    public void changePassword(String rawPassword) {
+        this.password = rawPassword;
     }
 
     public void changeStatusToActive() {

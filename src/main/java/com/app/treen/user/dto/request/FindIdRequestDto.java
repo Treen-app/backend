@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ResetPasswordDto {
-    private String loginId;
-    private String phone;
+public class FindIdRequestDto {
 
+    private String userName;
+    private String phoneNum;
 }

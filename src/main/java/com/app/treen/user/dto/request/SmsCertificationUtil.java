@@ -39,4 +39,13 @@ public class SmsCertificationUtil {
         log.info(String.valueOf(response));
         return response;
     }
+    public SingleMessageSentResponse sendRestPassword(String to, String verification){
+        Message message = new Message();
+        message.setFrom(senderNumber);
+        message.setTo(to);
+        message.setText("[트린] 임시 비밀번호는 " + verification + "입니다. 로그인 후에 비밀번호를 변경해주세요.");
+        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        log.info(String.valueOf(response));
+        return response;
+    }
 }

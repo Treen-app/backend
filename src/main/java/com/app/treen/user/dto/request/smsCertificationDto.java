@@ -9,4 +9,10 @@ public class smsCertificationDto {
         private String phone;
         private String certificationNumber;
     }
+
+    @Getter
+    public static class CertificationNumRequest {
+        private String phoneNum;
+    }
+
 }
