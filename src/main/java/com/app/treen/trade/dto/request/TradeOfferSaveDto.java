@@ -1,10 +1,6 @@
 package com.app.treen.trade.dto.request;
 
-import com.app.treen.products.entity.TradeProduct;
-import com.app.treen.trade.dto.response.TradeOfferResponseDto;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

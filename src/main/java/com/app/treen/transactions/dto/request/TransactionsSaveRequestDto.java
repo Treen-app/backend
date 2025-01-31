@@ -1,8 +1,5 @@
 package com.app.treen.transactions.dto.request;
 
-import com.app.treen.chat_room.entity.ChatRoom;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.*;
 
 import java.time.LocalDateTime;

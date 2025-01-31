@@ -34,6 +34,11 @@ public class TradeOffer extends BaseTimeEntity { // 자유교환 신청정보
     @JoinColumn(name = "users_id", nullable = false)
     private User buyer;
 
+    // 교환 수신자
+    @ManyToOne
+    @JoinColumn(name = "users_id", nullable = false)
+    private User seller;
+
     @OneToMany(mappedBy = "tradeOffer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OfferedProduct> offeredProductList = new ArrayList<>();
 

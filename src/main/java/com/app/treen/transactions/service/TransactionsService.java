@@ -1,9 +1,9 @@
 package com.app.treen.transactions.service;
 
-import com.app.treen.chat_room.entity.ChatRoom;
+import com.app.treen.transactions.transactions_chat.chat_room.entity.ChatRoom;
 import com.app.treen.common.response.code.status.ErrorStatus;
 import com.app.treen.common.response.exception.CustomException;
-import com.app.treen.jpa.repository.ChatRoomRepository;
+import com.app.treen.jpa.repository.transactions.ChatRoomRepository;
 import com.app.treen.jpa.repository.transactions.TransactionsRepository;
 import com.app.treen.products.entity.enumeration.Status;
 import com.app.treen.transactions.dto.request.TransactionsSaveRequestDto;
