@@ -1,8 +1,7 @@
-package com.app.treen.trade.trade_chat.chat_room;
+package com.app.treen.trade.trade_chat.chat_room.entity;
 
 import com.app.treen.BaseTimeEntity;
 import com.app.treen.products.entity.TradeProduct;
-import com.app.treen.products.entity.TransProduct;
 import com.app.treen.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

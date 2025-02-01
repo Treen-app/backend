@@ -1,7 +1,6 @@
-package com.app.treen.trade.trade_chat.message;
+package com.app.treen.trade.trade_chat.message.document;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
