@@ -161,25 +161,28 @@ public class UserService {
         smsCertificationDao.createSmsCertification(to,certificationNumber);
     }
 
-
+    // 인증번호 확인
     public void verifySms(smsCertificationDto.SmsCertificationRequest requestDto) {
         if (isVerify(requestDto)) {
             throw new CustomException(ErrorStatus.CERTIFICATION_NUMBER_NOT_MATCHED);
         }
     }
 
+    // 인증번호 일치 확인
     public boolean isVerify(smsCertificationDto.SmsCertificationRequest request) {
         return !(smsCertificationDao.hasKey(request.getPhone()) &&
                 smsCertificationDao.getSmsCertification(request.getPhone())
                         .equals(request.getCertificationNumber()));
     }
 
+    // 아이디 찾기
     public FindLoginIdResponseDto findLoginId(FindIdRequestDto requestDto) {
         User thisUser = userRepository.findByUserNameAndPhoneNum(requestDto.getUserName(),requestDto.getPhoneNum())
                 .orElseThrow(()-> new CustomException(ErrorStatus.USER_NOT_FOUND));
         return new FindLoginIdResponseDto(thisUser.getLoginId());
-
+        }
     }
-}
 
-
+    // 소셜 로그인 및 회원가입
+    // 소셜 로그인 -> 가입 안되어있을 경우 회원가입
+    // 인증 코드를 가져오기

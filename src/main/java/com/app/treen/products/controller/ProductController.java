@@ -1,6 +1,7 @@
 package com.app.treen.products.controller;
 
 import com.app.treen.common.response.code.status.SuccessStatus;
+import com.app.treen.jpa.repository.products.TransProductRepository;
 import com.app.treen.products.dto.ProductQueryHelper;
 import com.app.treen.products.dto.TradeQueryHelper;
 import com.app.treen.products.dto.request.*;
@@ -13,6 +14,7 @@ import com.app.treen.products.service.ProductService;
 import com.app.treen.user.entity.User;
 import com.app.treen.user.service.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +29,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/product")
+@Tag(name = "상품 API")
 public class ProductController {
 
     private final ProductService productService;
@@ -73,6 +76,7 @@ public class ProductController {
             @RequestPart("product") TradeProductUpdateDto requestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
         productService.updateTradeProduct(productId,requestDto,images);
+
         return ResponseEntity.ok(SuccessStatus.PRODUCT_EDIT_SUCCESS);
     }
 

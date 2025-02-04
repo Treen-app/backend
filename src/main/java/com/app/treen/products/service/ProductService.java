@@ -181,11 +181,10 @@ public class ProductService {
         // S3에 새로운 파일 업로드 및 URL 변환
         if (files != null && !files.isEmpty()) {
             List<String> uploadedUrls = s3Uploader.upload(files, "trans-product-images");
-            dto.setImageUrls(uploadedUrls);
 
             // 기존 이미지 삭제 및 새로운 이미지 저장
             transPImgRepository.deleteByTransProduct(existingProduct);
-            List<TransPImg> newImages = dto.toImageEntities(existingProduct);
+            List<TransPImg> newImages = dto.getImgRequest().toImageEntities(existingProduct,uploadedUrls);
             transPImgRepository.saveAll(newImages);
         }
         existingProduct.updateDetails(
@@ -215,21 +214,19 @@ public class ProductService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
 
         // 희망 카테고리 조회
-        List<Category> wishCategories = categoryRepository.findAllById(dto.getWishCategoryIds());
+        List<Category> wishCategories = categoryRepository.findAllById(dto.getWishCategoryRequest().getWishCategoryIds());
 
         // 이미지 업로드 및 저장
         if (files != null && !files.isEmpty()) {
             List<String> uploadedUrls = s3Uploader.upload(files, "trade-product-images");
-            dto.setImageUrls(uploadedUrls);
-
             // 기존 이미지 삭제 및 새 이미지 저장
             tradePImgRepository.deleteByTradeProduct(existingProduct);
-            List<TradePImg> newImages = dto.toImageEntities(existingProduct);
+            List<TradePImg> newImages = dto.getImgRequest().toImageEntities(existingProduct,uploadedUrls);
             tradePImgRepository.saveAll(newImages);
         }
 
         // 희망 카테고리 업데이트
-        List<WishCategory> wishCategoryEntities = dto.toWishCategoryEntities(existingProduct, wishCategories);
+        List<WishCategory> wishCategoryEntities = dto.getWishCategoryRequest().toWishCategoryEntities(existingProduct, wishCategories);
         wishCategoryRepository.deleteByTradeProduct(existingProduct); // 기존 희망 카테고리 삭제
         wishCategoryRepository.saveAll(wishCategoryEntities); // 새로운 희망 카테고리 저장
 

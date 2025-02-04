@@ -33,9 +33,13 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_PHONE_IS_YOURS(HttpStatus.BAD_REQUEST, "USER4013", "본인이 사용중인 휴대폰번호입니다."),
     USER_PHONE_IS_USED(HttpStatus.BAD_REQUEST, "USER4014", "이미 사용중인 휴대폰번호입니다. 관리자에게 문의하세요"),
     USER_IS_SUSPENSION(HttpStatus.BAD_REQUEST, "USER4015", "정지된 계정입니다."),
+
+    INVALID_KAKAO_TOKEN(HttpStatus.BAD_REQUEST, "USER4016", "유효하지 않은 카카오 토큰입니다."),
+
     USER_IS_ALREADY_REGISTERED_KAKAO(HttpStatus.IM_USED, "USER4016", "이미 카카오계정으로 가입된 전화번호입니다. 카카오로 로그인해주세요."),
     USER_IS_INTEGRATED_KAKAO(HttpStatus.ACCEPTED, "USER4017", "사용자의 계정이 카카오계정과 통합되었습니다. YESOL 계정 혹은 카카오로 로그인해주세요."),
 
+    KAKAO_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"USER4018","카카오 서버 에러"),
     // 관리자 관련 에러
     NOT_ADMIN(HttpStatus.UNAUTHORIZED, "ADMIN4001", "관리자의 권한이 없습니다."),
 
@@ -68,6 +72,7 @@ public enum ErrorStatus implements BaseErrorCode {
     BOARD_NOT_COMPLAINT(HttpStatus.BAD_REQUEST, "BOARD4011", "자신의 게시글은 신고할 수 없습니다."),
     BOARD_NOT_LIKE(HttpStatus.BAD_REQUEST, "BOARD4012", "자신의 게시글은 좋아요 할 수 없습니다."),
     BOARD_PICTURE_OVERED(HttpStatus.BAD_REQUEST, "BOARD4013", "사진 개수를 초과하였습니다."),
+
 
     // 자주 묻는 질문 관련 에러
     FAQ_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "FAQ4001", "카테고리 값이 잘못 되었습니다."),
@@ -126,7 +131,11 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 상품 에러
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT4001", "상품을 찾을 수 없습니다."),
-    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001", "카테고리를 찾을 수 없습니다.");
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001", "카테고리를 찾을 수 없습니다."),
+
+    // sns 로그인 에러
+    INVALID_PROVIDER(HttpStatus.BAD_REQUEST , "OAUTH400" , "로그인 대상이 유효하지 않습니다."),
+    INVALID_OAUTH_TOKEN(HttpStatus.BAD_REQUEST, "OAUTH401","유효하지 않은 토큰입니다. ");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
@@ -138,7 +147,7 @@ public enum ErrorStatus implements BaseErrorCode {
                 .code(code)
                 .isSuccess(false)
                 .build();
-    }
+        }
 
 
 

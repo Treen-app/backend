@@ -76,7 +76,6 @@ public class TradeProduct extends BaseTimeEntity {
 
 
     public void updateDetail(TradeProductUpdateDto dto, Category category) {
-        // DTO에서 받은 값으로 기존 제품의 필드를 업데이트합니다.
         this.name = dto.getName();
         this.usedTerm = dto.getUsedTerm();
         this.size = dto.getSize();

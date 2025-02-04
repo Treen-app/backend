@@ -9,6 +9,7 @@ import com.app.treen.user.dto.response.FindLoginIdResponseDto;
 import com.app.treen.user.dto.response.LoginResponseDto;
 import com.app.treen.user.dto.response.MemberResponseDto;
 import com.app.treen.user.service.CustomUserDetails;
+import com.app.treen.user.service.OAuthService;
 import com.app.treen.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +27,7 @@ public class UserController {
 
     private final UserService memberService;
 
+    private final OAuthService oAuthService;
     // 회원가입
     @Operation(summary = "회원가입 API")
     @PostMapping("/join")
@@ -82,7 +84,16 @@ public class UserController {
         }
     }
 
-    // 카카오 로그인
+    // 소셜로그인
+    @Operation(summary = "소셜 로그인")
+    @PostMapping("/login/oauth/{provider}")
+    public ResponseEntity<LoginResponseDto> loginWihSns(
+            @RequestBody OauthJoinRequestDto requestDto,
+            @PathVariable String provider
+            ){
+        LoginResponseDto responseDto = oAuthService.login(provider,requestDto.getAccessToken());
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
 
     // 비밀번호 재설정
     @Operation(summary = "비밀번호 재설정 API")

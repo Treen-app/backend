@@ -30,15 +30,18 @@ public class User {
     @Column(name = "login_id", unique = true, nullable = false)
     private String loginId;
     private String password;
-    @Column(name = "phone_num", unique = true, nullable = false)
+    @Column(name = "phone_num", unique = true)
     private String phoneNum;
 
     @Enumerated(EnumType.STRING)
-    private UserStatus status; // ACTIVE, DELETED, DEACTIVATED
+    private UserStatus status = UserStatus.ACTIVE; // ACTIVE, DELETED, DEACTIVATED
 
     @Setter
     @Column(name = "profile_img_url")
     private String profileImgUrl;
+
+    @Column(name = "login_type")
+    private String loginType;
 
     @Builder.Default
     private Long point = 1000L;

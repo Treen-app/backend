@@ -1,4 +1,7 @@
 spring:
+  thymeleaf:
+    suffix: .html
+    cache: false
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: ${DB_URL:jdbc:mysql://localhost:3306/treen}
@@ -40,6 +43,24 @@ cloud:
     region:
       static: ${AWS_REGION:ap-northeast-2}
       auto: false
+auth:
+  kakao:
+    token-request-uri: ${TOKEN_REQUEST_URI}
+    member-info-request-uri: ${MEMBER_INFO_REQUEST_URI}
+    redirect-uri: ${REDIRECT_URI}
+    client-id: ${CLIENT_ID}
+  google:
+    token-request-uri: ${GOOGLE_TOKEN_REQUEST_URI}
+    member-info-request-uri: ${GOOGLE_MEMBER_INFO_REQUEST_URI}
+    redirect-uri: ${GOOGLE_REDIRECT_URI}
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
+  naver:
+    token-request-uri: ${NAVER_TOKEN_REQUEST_URI}
+    member-info-request-uri: ${NAVER_MEMBER_INFO_REQUEST_URI}
+    redirect-uri: ${NAVER_REDIRECT_URI}
+    client-id: ${NAVER_CLIENT_ID}
+    client-secret: ${NAVER_CLIENT_SECRET}
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}

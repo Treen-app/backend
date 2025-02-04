@@ -1,7 +1,6 @@
 package com.app.treen.products.dto.request;
 
-import com.app.treen.products.entity.TransPImg;
-import com.app.treen.products.entity.TransProduct;
+import com.app.treen.products.entity.TransRegion;
 import com.app.treen.products.entity.enumeration.Gender;
 import com.app.treen.products.entity.enumeration.Method;
 import com.app.treen.products.entity.enumeration.Size;
@@ -9,12 +8,23 @@ import com.app.treen.products.entity.enumeration.UsedRank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
 public class TransProductUpdateDto {
+    public TransProductUpdateDto(String name, String usedTerm, Size size, String detail, UsedRank usedRank, Method method, Long point, Gender gender, Long categoryId, TransRegionRequestDto regionRequest, TransImgRequestDto imgRequest) {
+        this.name = name;
+        this.usedTerm = usedTerm;
+        this.size = size;
+        this.detail = detail;
+        this.usedRank = usedRank;
+        this.method = method;
+        this.point = point;
+        this.gender = gender;
+        this.categoryId = categoryId;
+        this.regionRequest = regionRequest;
+        this.imgRequest = imgRequest;
+    }
 
     private String name;              // 상품 이름
     private String usedTerm;          // 사용 기간
@@ -25,22 +35,8 @@ public class TransProductUpdateDto {
     private Long point;               // 상품 포인트
     private Gender gender;            // 대상 성별
     private Long categoryId;          // 카테고리 ID
-    private List<String> imageUrls = new ArrayList<>(); // 이미지 URL 리스트
 
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
-    }
+    private TransRegionRequestDto regionRequest;
+    private TransImgRequestDto imgRequest;
 
-    public List<TransPImg> toImageEntities(TransProduct transProduct) {
-        List<TransPImg> images = new ArrayList<>();
-        for (int i = 0; i < imageUrls.size(); i++) {
-            images.add(TransPImg.builder()
-                    .transProduct(transProduct)
-                    .imgUrl(imageUrls.get(i))
-                    .sortOrder(i)
-                    .isMain(i == 0) // 첫 번째 이미지를 대표 이미지로 설정
-                    .build());
-        }
-        return images;
-    }
 }

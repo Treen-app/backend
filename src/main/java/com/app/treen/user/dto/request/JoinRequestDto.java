@@ -53,6 +53,7 @@ public class JoinRequestDto {
                 .userName(name)
                 .phoneNum(phoneNumber)
                 .password(encodedPassword)
+                .loginType("default_login")
                 .roles(Collections.singletonList(role))
                 .build();
     }
