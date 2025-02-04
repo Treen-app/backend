@@ -1,6 +1,6 @@
 package com.app.treen.common.redis.service;
 
-import com.app.treen.message.dto.MessageRequest;
+import com.app.treen.transactions.transactions_chat.message.dto.MessageRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

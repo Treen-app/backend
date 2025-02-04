@@ -121,10 +121,16 @@ public enum ErrorStatus implements BaseErrorCode {
     // 이미지 에러
     IMAGE_MUST_BE_UPLOADED(HttpStatus.BAD_REQUEST, "IMAGE4001", "이미지는 1장 이상 업로드해야합니다."),
     IMAGE_OVER_UPLOADED(HttpStatus.BAD_REQUEST, "IMAGE4001", "이미지는 5장까지만 업로드할 수 있습니다."),
+
     // 상품거래 예약 에러
     NOT_FOUND_TRANSACTIONS(HttpStatus.NOT_FOUND, "TRANSACTIONS4001", "상품거래 예약을 찾지 못했습니다."),
     PERMISSION_DENIED_TRANSACTIONS(HttpStatus.UNAUTHORIZED, "USER4001", "타인의 예약 내역은 수정 및 삭제할 수 없습니다."),
     SHOULD_BE_BOOKED(HttpStatus.BAD_REQUEST, "TRANSACTIONS400", "판매완료 및 예약 전 상품은 예약 취소할 수 없습니다."),
+
+    // 상품교환 에러
+    TRADE_NOT_FOUND(HttpStatus.NOT_FOUND, "TRADE4004", "상품교환 신청 내역을 찾지 못했습니다."),
+    PERMISSION_DENIED_TRADE(HttpStatus.UNAUTHORIZED, "TRADE4003", "상품교환 요청 변경 권한이 없습니다."),
+    SHOULD_NOT_BE_ACCOMPLISHED(HttpStatus.BAD_REQUEST, "TRADE400", "성사된 교환요청은 삭제할 수 없습니다."),
 
     // 전화번호 인증 관련 에러
     CERTIFICATION_NUMBER_NOT_MATCHED(HttpStatus.BAD_REQUEST, "SMS4001", "인증번호가 일치하지 않습니다."),

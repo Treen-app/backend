@@ -1,15 +1,12 @@
 package com.app.treen.transactions.entity;
 
 import com.app.treen.BaseTimeEntity;
-import com.app.treen.chat_room.entity.ChatRoom;
-import com.app.treen.products.entity.TransProduct;
+import com.app.treen.transactions.transactions_chat.chat_room.entity.ChatRoom;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 

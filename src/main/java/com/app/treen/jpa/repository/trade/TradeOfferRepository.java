@@ -9,4 +9,5 @@ import java.util.List;
 public interface TradeOfferRepository extends JpaRepository<TradeOffer, Long> {
 
     List<TradeOffer> findAllByBuyer(User user);
+    List<TradeOffer> findAllBySeller(User user);
 }
