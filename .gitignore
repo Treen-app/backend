@@ -1,5 +1,8 @@
 HELP.md
-.gradle
+.gradle/
+gradlew.bat
+gradlew
+.github/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -41,5 +44,4 @@ out/
 
 ### VS Code ###
 .vscode/
-.github
 .DS_Store
