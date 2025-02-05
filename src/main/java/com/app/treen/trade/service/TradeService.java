@@ -157,11 +157,6 @@ public class TradeService {
     }
 
     // 요청 승인 (자유교환 채팅 시작)
-    @Transactional
-    public Long createChatting(User user, Long tradeOfferId) {
-
-
-    }
 
     // 자유교환 거래 예약
 

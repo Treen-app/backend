@@ -24,13 +24,17 @@ public class QUserProfile extends EntityPathBase<UserProfile> {
 
     public final DatePath<java.time.LocalDate> birthDate = createDate("birthDate", java.time.LocalDate.class);
 
-    public final EnumPath<com.app.treen.products.entity.enumeration.Gender> gender = createEnum("gender", com.app.treen.products.entity.enumeration.Gender.class);
+    public final StringPath clothingSize = createString("clothingSize");
+
+    public final NumberPath<Integer> footSize = createNumber("footSize", Integer.class);
+
+    public final StringPath gender = createString("gender");
 
     public final NumberPath<Integer> height = createNumber("height", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final EnumPath<com.app.treen.products.entity.enumeration.Size> size = createEnum("size", com.app.treen.products.entity.enumeration.Size.class);
+    public final StringPath nickname = createString("nickname");
 
     public final QUser user;
 
