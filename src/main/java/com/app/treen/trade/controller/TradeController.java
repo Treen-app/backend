@@ -68,13 +68,13 @@ public class TradeController {
     }
 
     // 요청 승인 (자유교환 채팅 시작)
-    @GetMapping("/auth/approve/{tradeOfferId}")
-    public ResponseEntity<Long> getChatting(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                            @PathVariable("tradeOfferId") Long tradeOfferId) {
-        Long chatRoomId = tradeService.createChatting(userDetails.getUser(), tradeOfferId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(chatRoomId);
-    }
+//    @GetMapping("/auth/approve/{tradeOfferId}")
+//    public ResponseEntity<Long> getChatting(@AuthenticationPrincipal CustomUserDetails userDetails,
+//                                            @PathVariable("tradeOfferId") Long tradeOfferId) {
+//        Long chatRoomId = tradeService.createChatting(userDetails.getUser(), tradeOfferId);
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(chatRoomId);
+//    }
 
     // 자유교환 거래 예약
 

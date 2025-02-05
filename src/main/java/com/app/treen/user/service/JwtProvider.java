@@ -159,6 +159,8 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
+
+
     /**
      * 로그인 시 토큰 생성
      * @param member

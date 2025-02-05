@@ -132,7 +132,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 상품 에러
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT4001", "상품을 찾을 수 없습니다."),
-    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001", "카테고리를 찾을 수 없습니다.");
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001", "카테고리를 찾을 수 없습니다."),
+
+    // 경로 예외
+    NOT_VALID_URI(HttpStatus.BAD_REQUEST, "URI 4000", "유효한 경로로 요청해주세요.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

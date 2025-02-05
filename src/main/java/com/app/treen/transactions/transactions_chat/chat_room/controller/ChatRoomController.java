@@ -1,7 +1,6 @@
 package com.app.treen.transactions.transactions_chat.chat_room.controller;
 
 import com.app.treen.transactions.transactions_chat.chat_room.dto.request.ChatRoomRequestDto;
-import com.app.treen.chat_room.dto.response.*;
 import com.app.treen.transactions.transactions_chat.chat_room.dto.response.ChatRoomDetailResponse;
 import com.app.treen.transactions.transactions_chat.chat_room.dto.response.ChatRoomsResponse;
 import com.app.treen.transactions.transactions_chat.chat_room.dto.response.MessageResponseDto;

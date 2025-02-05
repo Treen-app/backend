@@ -28,7 +28,6 @@ public class MessageService {
     //private final FileManager fileManager;
     private final ApplicationEventPublisher eventPublisher;
 
-
     public Mono<Message> saveMessage(MessageRequest messageRequest) {
 
         ChatRoom chatRoom = getChatRoomOrThrow(messageRequest.getRoomId());
