@@ -42,7 +42,7 @@ public class QTransactions extends EntityPathBase<Transactions> {
 
     public final StringPath place = createString("place");
 
-    public final com.app.treen.chat_room.entity.QChatRoom transChatRoom;
+    public final com.app.treen.transactions.transactions_chat.chat_room.entity.QChatRoom transChatRoom;
 
     public final DateTimePath<java.time.LocalDateTime> transDate = createDateTime("transDate", java.time.LocalDateTime.class);
 
@@ -64,7 +64,7 @@ public class QTransactions extends EntityPathBase<Transactions> {
 
     public QTransactions(Class<? extends Transactions> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.transChatRoom = inits.isInitialized("transChatRoom") ? new com.app.treen.chat_room.entity.QChatRoom(forProperty("transChatRoom"), inits.get("transChatRoom")) : null;
+        this.transChatRoom = inits.isInitialized("transChatRoom") ? new com.app.treen.transactions.transactions_chat.chat_room.entity.QChatRoom(forProperty("transChatRoom"), inits.get("transChatRoom")) : null;
     }
 
 }

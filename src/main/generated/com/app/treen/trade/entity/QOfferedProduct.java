@@ -20,13 +20,13 @@ public class QOfferedProduct extends EntityPathBase<OfferedProduct> {
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QOfferedProduct offeredProduct1 = new QOfferedProduct("offeredProduct1");
+    public static final QOfferedProduct offeredProduct = new QOfferedProduct("offeredProduct");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final BooleanPath isAccepted = createBoolean("isAccepted");
 
-    public final com.app.treen.products.entity.QTradeProduct offeredProduct;
+    public final com.app.treen.products.entity.QTradeProduct product;
 
     public final QTradeOffer tradeOffer;
 
@@ -48,7 +48,7 @@ public class QOfferedProduct extends EntityPathBase<OfferedProduct> {
 
     public QOfferedProduct(Class<? extends OfferedProduct> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.offeredProduct = inits.isInitialized("offeredProduct") ? new com.app.treen.products.entity.QTradeProduct(forProperty("offeredProduct"), inits.get("offeredProduct")) : null;
+        this.product = inits.isInitialized("product") ? new com.app.treen.products.entity.QTradeProduct(forProperty("product"), inits.get("product")) : null;
         this.tradeOffer = inits.isInitialized("tradeOffer") ? new QTradeOffer(forProperty("tradeOffer"), inits.get("tradeOffer")) : null;
     }
 
