@@ -15,6 +15,8 @@ public class OAuth2Attribute {
     private String attributeKey;
     private String email;
     private String picture;
+    private String phoneNum;
+
 
     public static OAuth2Attribute of(String provider, String attributeKey, Map<String, Object> attributes) {
         switch (provider) {
@@ -41,31 +43,54 @@ public class OAuth2Attribute {
 
     private static OAuth2Attribute ofNaver(String attributeKey, Map<String,Object> attributes){
         Map<String,Object> response = (Map<String, Object>) attributes.get("response");
+
         return OAuth2Attribute.builder()
                 .email((String) response.get("email"))
-                .picture((String)response.get("profile_image"))
+                .picture((String) response.get("profile_image"))
+                .phoneNum((String) response.get("mobile"))  // 네이버에만 추가
                 .attributeKey(attributeKey)
                 .attributes(response)
                 .build();
     }
 
-    private static OAuth2Attribute ofKakao(String attributeKey, Map<String,Object> attributes) {
-        Map<String,Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String,Object> kakaoProfile = (Map<String, Object>) attributes.get("profile");
+
+    private static OAuth2Attribute ofKakao(String attributeKey, Map<String, Object> attributes) {
+        // kakao_account가 없으면 null 처리
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        String email = null;
+        String picture = null;
+
+        if (kakaoAccount != null) {
+          //  email = (String) kakaoAccount.get("email");
+            // kakaoAccount 내에 profile이 있는지 확인
+            Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
+            if (kakaoProfile != null) {
+                email = (String) kakaoProfile.get("nickname");
+                picture = (String) kakaoProfile.get("profile_image_url");
+            }
+        }
+
         return OAuth2Attribute.builder()
-                .email((String) kakaoAccount.get("email"))
-                .picture((String) kakaoProfile.get("profile_image"))
+                .email(email)
+                .picture(picture)
                 .attributes(attributes)
                 .attributeKey(attributeKey)
                 .build();
-      }
+    }
 
-      public Map<String,Object> convertToMap() {
+
+    public Map<String,Object> convertToMap() {
         Map<String,Object> map = new HashMap<>();
-        map.put("id",attributeKey);
-        map.put("key",attributeKey);
-        map.put("email",email);
-        map.put("picture",picture);
+        map.put("id", attributeKey);
+        map.put("key", attributeKey);
+        map.put("email", email);
+        map.put("picture", picture);
+
+        if (phoneNum != null) {  // 네이버 OAuth에서만 추가
+            map.put("phoneNum", phoneNum);
+        }
+
         return map;
-      }
+    }
+
 }

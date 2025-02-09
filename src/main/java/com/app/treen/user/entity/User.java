@@ -24,13 +24,13 @@ public class User {
     @Column(name = "users_id")
     private Long id;
 
-    @Column(name = "user_name", unique = true, nullable = false)
+    @Column(name = "user_name", unique = true)
     private String userName;
 
-    @Column(name = "login_id", unique = true, nullable = false)
+    @Column(name = "login_id", unique = true)
     private String loginId;
     private String password;
-    @Column(name = "phone_num", unique = true)
+    @Column(name = "phone_num", nullable = true)
     private String phoneNum;
 
     @Enumerated(EnumType.STRING)
