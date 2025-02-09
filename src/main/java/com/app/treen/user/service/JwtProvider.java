@@ -83,8 +83,7 @@ public class JwtProvider {
         claims.put("role", member.getRoles());
 
         Date now = new Date();
-        return BEARER_PREFIX +
-                Jwts.builder()
+        return Jwts.builder()
                         .claim(AUTHORIZATION_KEY,role)
                         .setSubject(member.getLoginId())
                         .setClaims(claims)
