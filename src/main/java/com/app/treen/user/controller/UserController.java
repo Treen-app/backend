@@ -85,17 +85,33 @@ public class UserController {
 
 
     // 인가코드 리다이렉트
-    @Operation(summary = "인가코드 리다이렉트 API")
+    @Operation(summary = "네이버 인가코드 리다이렉트 API")
     @GetMapping("/login/oauth2/naver")
-    public @ResponseBody String kakaoCallback(String code){
+    public @ResponseBody String naverCallback(@RequestParam String code, @RequestParam String state){
         return code;
     }
 
     @Operation(summary = "네이버 로그인")
     @PostMapping("/login/oauth/naver")
     public ResponseEntity<LoginResponseDto> naverLogin(@RequestBody OAuthCodeRequestDto requestDto) {
-        String accessToken = oAuthService.getNaverToken(requestDto.getCode()).getAccess_token();
+        String accessToken = oAuthService.getNaverToken(requestDto.getCode(), requestDto.getState()).getAccessToken();
         LoginResponseDto responseDto = oAuthService.login("naver",accessToken);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    // 구글 인가 코드 리다이렉트
+    @Operation(summary = "구글 인가코드 리다이렉트 API")
+    @GetMapping("/login/oauth2/code/google")
+    public @ResponseBody String googleCallback(@RequestParam String code){
+        return code;
+    }
+
+    // 구글 로그인
+    @Operation(summary = "구글 로그인")
+    @PostMapping("/login/oauth/google")
+    public ResponseEntity<LoginResponseDto> googleLogin(@RequestBody OAuthGoogleRequestDto requestDto) {
+        String accessToken = oAuthService.getGoogleToken(requestDto.getCode()).getAccessToken();
+        LoginResponseDto responseDto = oAuthService.login("google",accessToken);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 

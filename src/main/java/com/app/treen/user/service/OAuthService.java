@@ -5,6 +5,7 @@ import com.app.treen.common.response.exception.CustomException;
 import com.app.treen.jpa.repository.user.UserRepository;
 import com.app.treen.user.dto.request.CustomUserInfoDto;
 import com.app.treen.user.dto.request.OAuthTokenRequestDto;
+import com.app.treen.user.dto.response.GoogleOAuthTokenResponse;
 import com.app.treen.user.dto.response.LoginResponseDto;
 import com.app.treen.user.dto.response.OauthAccessTokenResponse;
 import com.app.treen.user.dto.response.TokenResponseDto;
@@ -44,16 +45,28 @@ public class OAuthService {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String TOKEN_TYPE = "Bearer ";
 
-    @Value("${auth.naver.redirect-uri")
+    @Value("${auth.naver.redirect-uri}")
     private String naverRedirectUri;
 
-    @Value("${auth.naver.client-id")
+    @Value("${auth.naver.client-id}")
     private String naverClientId;
 
-    @Value("${auth.naver.token-request-uri")
+    @Value("${auth.naver.token-request-uri}")
     private String naverTokenRequestUri;
-    @Value("${auth.naver.client-secret")
+    @Value("${auth.naver.client-secret}")
     private String naverClientSecret;
+
+    @Value("${auth.google.redirect-uri}")
+    private String googleRedirectUri;
+
+    @Value("${auth.google.client-id}")
+    private String googleClientId;
+
+    @Value("${auth.google.client-secret}")
+    private String googleClientSecret;
+
+    @Value("${auth.google.token-request-uri}")
+    private String googleTokenRequestUri;
 
     @Value("${auth.kakao.member-info-request-uri}")
     private String kakaoMemberInfoRequestUri;
@@ -63,28 +76,65 @@ public class OAuthService {
     private String naverMemberInfoRequestUri;
 
     /**
-     * 토큰 받아오기 ( naver )
+     * Google 토큰 받아오기
+     * @param code
+     * @return GoogleOauthTokenResponse
+     */
+    public GoogleOAuthTokenResponse getGoogleToken(String code) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", googleClientId);
+        params.add("client_secret", googleClientSecret);
+        params.add("redirect_uri", googleRedirectUri);
+        params.add("code", code);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(googleTokenRequestUri, request, String.class);
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                return objectMapper.readValue(response.getBody(), GoogleOAuthTokenResponse.class);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(ErrorStatus.INVALID_OAUTH_TOKEN);
+        }
+
+        throw new CustomException(ErrorStatus.INVALID_OAUTH_TOKEN);
+    }
+
+
+    /**
+     * 네이버 토큰 받아오기
      * @param code
      * @return
      */
-    public OAuthTokenRequestDto getNaverToken(String code) {
+    public OauthAccessTokenResponse getNaverToken(String code, String state) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", naverClientId);
-        params.add("redirect_uri", naverRedirectUri);
         params.add("code", code);
         params.add("client_secret", naverClientSecret);
+        params.add("state", state);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(naverTokenRequestUri, request, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(naverTokenRequestUri, HttpMethod.POST,request, String.class);
+        log.info("응답 " + response);
+        log.info("네이버 OAuth 요청 - body: {}", request);
         if (response.getStatusCode() == HttpStatus.OK){
             ObjectMapper objectMapper = new ObjectMapper();
             OauthAccessTokenResponse accessTokenResponse = null;
             try {
                 accessTokenResponse = objectMapper.readValue(response.getBody(), OauthAccessTokenResponse.class);
+                return accessTokenResponse;
             }  catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -111,10 +161,7 @@ public class OAuthService {
             } else if (provider.equals("google")) {
                 headers.set(AUTHORIZATION_HEADER, TOKEN_TYPE + accessToken);
                 headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-                requestUri = UriComponentsBuilder.fromHttpUrl(googleMemberInfoRequestUri)
-                        .queryParam("fields", "id,email,name,picture") // 추후 수ㅁ
-                        .build()
-                        .toString();
+                requestUri = googleMemberInfoRequestUri;
             } else {
                 throw new CustomException(ErrorStatus.INVALID_PROVIDER);
             }

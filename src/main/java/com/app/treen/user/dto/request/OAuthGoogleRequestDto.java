@@ -1,9 +1,12 @@
 package com.app.treen.user.dto.request;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class OAuthCodeRequestDto {
+@NoArgsConstructor
+public class OAuthGoogleRequestDto {
+
     String code;
-    String state;
+
 }
