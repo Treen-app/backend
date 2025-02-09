@@ -4,17 +4,19 @@ import com.app.treen.common.response.code.status.ErrorStatus;
 import com.app.treen.common.response.exception.CustomException;
 import com.app.treen.jpa.repository.user.UserRepository;
 import com.app.treen.user.dto.request.CustomUserInfoDto;
+import com.app.treen.user.dto.request.OAuthTokenRequestDto;
 import com.app.treen.user.dto.response.LoginResponseDto;
 import com.app.treen.user.dto.response.OauthAccessTokenResponse;
 import com.app.treen.user.dto.response.TokenResponseDto;
 import com.app.treen.user.entity.OAuth2Attribute;
 import com.app.treen.user.entity.RoleType;
 import com.app.treen.user.entity.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.stereotype.Service;
@@ -23,22 +25,35 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class OAuthService {
 
-    // InMemoryClientRegistrationRepository는 더 이상 사용하지 않으므로 제거합니다.
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private final RestTemplate restTemplate;
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String TOKEN_TYPE = "Bearer ";
+
+    @Value("${auth.naver.redirect-uri")
+    private String naverRedirectUri;
+
+    @Value("${auth.naver.client-id")
+    private String naverClientId;
+
+    @Value("${auth.naver.token-request-uri")
+    private String naverTokenRequestUri;
+    @Value("${auth.naver.client-secret")
+    private String naverClientSecret;
 
     @Value("${auth.kakao.member-info-request-uri}")
     private String kakaoMemberInfoRequestUri;
@@ -48,35 +63,74 @@ public class OAuthService {
     private String naverMemberInfoRequestUri;
 
     /**
+     * 토큰 받아오기 ( naver )
+     * @param code
+     * @return
+     */
+    public OAuthTokenRequestDto getNaverToken(String code) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", naverClientId);
+        params.add("redirect_uri", naverRedirectUri);
+        params.add("code", code);
+        params.add("client_secret", naverClientSecret);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(naverTokenRequestUri, request, String.class);
+        if (response.getStatusCode() == HttpStatus.OK){
+            ObjectMapper objectMapper = new ObjectMapper();
+            OauthAccessTokenResponse accessTokenResponse = null;
+            try {
+                accessTokenResponse = objectMapper.readValue(response.getBody(), OauthAccessTokenResponse.class);
+            }  catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+        throw new CustomException(ErrorStatus.INVALID_OAUTH_TOKEN);
+    }
+
+    /**
      * SNS 서버로부터 엑세스 토큰을 전달받아 사용자 정보를 요청
      */
     private Map<String, Object> getUserAttributes(String provider, String accessToken) {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.set(AUTHORIZATION_HEADER, TOKEN_TYPE + accessToken);
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            HttpEntity<Object> request = new HttpEntity<>(headers);
             String requestUri;
-            switch (provider) {
-                case "kakao":
-                    requestUri = kakaoMemberInfoRequestUri;
-                    break;
-                case "google":
-                    requestUri = googleMemberInfoRequestUri;
-                    break;
-                case "naver":
-                    requestUri = naverMemberInfoRequestUri;
-                    break;
-                default:
-                    throw new CustomException(ErrorStatus.INVALID_PROVIDER);
+
+            if (provider.equals("naver")) {
+                headers.set(AUTHORIZATION_HEADER, TOKEN_TYPE + accessToken);
+                headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+                requestUri = naverMemberInfoRequestUri;
+            } else if (provider.equals("kakao")) {
+                headers.set(AUTHORIZATION_HEADER, TOKEN_TYPE + accessToken);
+                headers.setContentType(new MediaType("application", "x-www-form-urlencoded", StandardCharsets.UTF_8));
+                requestUri = kakaoMemberInfoRequestUri;
+            } else if (provider.equals("google")) {
+                headers.set(AUTHORIZATION_HEADER, TOKEN_TYPE + accessToken);
+                headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+                requestUri = UriComponentsBuilder.fromHttpUrl(googleMemberInfoRequestUri)
+                        .queryParam("fields", "id,email,name,picture") // 추후 수ㅁ
+                        .build()
+                        .toString();
+            } else {
+                throw new CustomException(ErrorStatus.INVALID_PROVIDER);
             }
-            // GET 요청을 보내 사용자 정보를 Map으로 받아옴
-            return restTemplate.getForEntity(requestUri, Map.class, request).getBody();
+
+            log.info("Request URI: " + requestUri);
+            log.info("Request Headers: " + headers.toString());
+
+            // GET 요청을 보내 사용자 정보를 Map으로 받아옴.
+            HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+            return restTemplate.exchange(requestUri, HttpMethod.GET, requestEntity, Map.class).getBody();
         } catch (HttpClientErrorException | HttpServerErrorException e) {
+            e.printStackTrace();
             throw new CustomException(ErrorStatus.INVALID_OAUTH_TOKEN);
         }
     }
+
 
     /**
      * 사용자 저장 로직
@@ -84,13 +138,21 @@ public class OAuthService {
     public User saveUser(OAuth2Attribute oAuth2Attribute, String provider) {
         String loginId = oAuth2Attribute.getEmail();
         String profileImg = oAuth2Attribute.getPicture();
+        String phoneNum = (oAuth2Attribute.getPhoneNum() != null) ? oAuth2Attribute.getPhoneNum() : "000000000";
+
+        log.info("loginId : " + loginId);
+        log.info("phoneNum : " + phoneNum);
+
         return User.builder()
                 .roles(Collections.singletonList(RoleType.USER))
                 .profileImgUrl(profileImg)
                 .loginId(loginId)
+                .userName(loginId)
+                .phoneNum(phoneNum) // null 체크 후 저장
                 .loginType(provider)
                 .build();
     }
+
 
     /**
      * 로그인 및 회원가입 통합 처리
@@ -103,9 +165,8 @@ public class OAuthService {
     public LoginResponseDto login(String providerName, String accessToken) {
         // 1. 전달받은 accessToken을 사용하여 SNS 서버로부터 사용자 정보를 조회
         Map<String, Object> userAttribute = getUserAttributes(providerName, accessToken);
-
+        log.info("사용자 정보를 조회합니다. " + userAttribute.toString());
         // 2. provider별로 사용자 정보의 식별키(attributeKey)를 결정합니다.
-        //    예를 들어, Google의 경우에는 "sub" 또는 "id"를, Kakao는 내부적으로 "email"을 사용하도록 매핑되어 있으므로...
         String attributeKey;
         switch (providerName) {
             case "google":
@@ -130,9 +191,13 @@ public class OAuthService {
         User user;
         if (findUser.isPresent()) {
             user = findUser.get();
+            log.info("사용자가 없습니다.");
         } else {
             // 신규 사용자라면 저장
+            log.info("새로운 사용자를 생성합니다.");
             user = saveUser(attributes, providerName);
+            userRepository.save(user);
+            log.info(user.getId().toString());
         }
 
         // 5. 사용자 정보를 기반으로 자체 JWT 토큰 발급

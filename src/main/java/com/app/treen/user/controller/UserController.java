@@ -1,6 +1,5 @@
 package com.app.treen.user.controller;
 
-import com.app.treen.common.response.code.BaseCode;
 import com.app.treen.common.response.code.status.ErrorStatus;
 import com.app.treen.common.response.code.status.SuccessStatus;
 import com.app.treen.common.response.exception.CustomException;
@@ -84,7 +83,23 @@ public class UserController {
         }
     }
 
-    // 소셜로그인
+
+    // 인가코드 리다이렉트
+    @Operation(summary = "인가코드 리다이렉트 API")
+    @GetMapping("/login/oauth2/naver")
+    public @ResponseBody String kakaoCallback(String code){
+        return code;
+    }
+
+    @Operation(summary = "네이버 로그인")
+    @PostMapping("/login/oauth/naver")
+    public ResponseEntity<LoginResponseDto> naverLogin(@RequestBody OAuthCodeRequestDto requestDto) {
+        String accessToken = oAuthService.getNaverToken(requestDto.getCode()).getAccess_token();
+        LoginResponseDto responseDto = oAuthService.login("naver",accessToken);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    // 소셜 로그인
     @Operation(summary = "소셜 로그인")
     @PostMapping("/login/oauth/{provider}")
     public ResponseEntity<LoginResponseDto> loginWihSns(
