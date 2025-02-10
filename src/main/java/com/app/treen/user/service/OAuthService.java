@@ -93,6 +93,7 @@ public class OAuthService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
+        log.info("요청 : " + request);
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(googleTokenRequestUri, request, String.class);
 
@@ -185,7 +186,7 @@ public class OAuthService {
     public User saveUser(OAuth2Attribute oAuth2Attribute, String provider) {
         String loginId = oAuth2Attribute.getEmail();
         String profileImg = oAuth2Attribute.getPicture();
-        String phoneNum = (oAuth2Attribute.getPhoneNum() != null) ? oAuth2Attribute.getPhoneNum() : "000000000";
+        String phoneNum = (oAuth2Attribute.getPhoneNum() != null) ? oAuth2Attribute.getPhoneNum() : loginId;
 
         log.info("loginId : " + loginId);
         log.info("phoneNum : " + phoneNum);

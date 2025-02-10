@@ -83,7 +83,6 @@ public class UserController {
         }
     }
 
-
     // 인가코드 리다이렉트
     @Operation(summary = "네이버 인가코드 리다이렉트 API")
     @GetMapping("/login/oauth2/naver")
