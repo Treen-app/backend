@@ -12,6 +12,6 @@ public class TestController {
 
     @GetMapping("/check")
     public String checkServerStatus() {
-        return "check.";
+        return "check1";
     }
 }
