@@ -1,4 +1,3 @@
-/*
 package com.app.treen.chat_room.service;
 
 import com.app.treen.common.response.code.status.ErrorStatus;
@@ -49,8 +48,8 @@ public class ChatRoomService {
                         .orElseThrow())
                 .seller(userRepository.findById(sellerId)
                         .orElseThrow())
-                .transProduct(transProductRepository.findById(productId)
-                        .orElseThrow())
+                //.transProduct(transProductRepository.findById(productId)
+                        //.orElseThrow())
                     //.isReserved()
                 .build();
 
@@ -67,7 +66,7 @@ public class ChatRoomService {
                         .unreadCount(getUnreadCount(chatRoom, member))
                         //.otherMember(getOtherMemberDto(chatRoom.getOtherMember(loginMemberId)))
                         .lastMessage(getLastMessageDto(chatRoom))
-                        .isReserved().build())
+                        .isReserved(false).build())
                 .collect(Collectors.toList());
     }
 
@@ -125,6 +124,10 @@ public class ChatRoomService {
         }
     }
 
+//    private ChatRoomResponse.MemberDto getOtherMemberDto(Member otherMember) {
+//        return ChatRoomResponse.MemberDto.of(otherMember, fileManager.getFullPath(otherMember.getImage()));
+//    }
+
     // 채팅방 마지막 메시지 조회
 //    private ChatRoomResponse.MessageDto getLastMessageDto(ChatRoom chatRoom) {
 //        return messageRepository.findFirstByChatRoomOrderByIdDesc(chatRoom)
@@ -133,4 +136,4 @@ public class ChatRoomService {
 //
 //    }
 }
-*/
+

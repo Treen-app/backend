@@ -3,10 +3,7 @@ package com.app.treen.products.controller;
 import com.app.treen.common.response.code.status.SuccessStatus;
 import com.app.treen.products.dto.ProductQueryHelper;
 import com.app.treen.products.dto.TradeQueryHelper;
-import com.app.treen.products.dto.request.TradeProductSaveDto;
-import com.app.treen.products.dto.request.TradeProductUpdateDto;
-import com.app.treen.products.dto.request.TransProductSaveDto;
-import com.app.treen.products.dto.request.TransProductUpdateDto;
+import com.app.treen.products.dto.request.*;
 import com.app.treen.products.dto.response.TradeProductResponseDto;
 import com.app.treen.products.dto.response.TradeResponseListDto;
 import com.app.treen.products.dto.response.TransProductResponseDto;
@@ -38,12 +35,10 @@ public class ProductController {
     @PostMapping(value = "/transaction/save", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<TransProductResponseDto> saveTransProduct(
             @RequestPart("images") List<MultipartFile> images, // 이미지 리스트로 변경
-            @RequestPart("product") TransProductSaveDto requestDto,
-            User user
+            @RequestPart("product") TransactionRequestDto requestDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) throws IOException {
-      //  User user = new User(); // 현재 사용자의 정보를 가져오는 로직 추가 필요
-        TransProductResponseDto responseDto = productService.saveTransProduct(requestDto,images, user);
-
+        TransProductResponseDto responseDto = productService.saveTransProduct(requestDto,images, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
@@ -141,17 +136,19 @@ public class ProductController {
 
     @Operation(summary = "거래상품 좋아요 및 취소", description = "좋아요 되어있을 경우 취소, 안되어있을 경우 좋아요 등록됩니다.")
     @GetMapping("/transaction/like/{productId}")
-    public ResponseEntity<?> registerLikesTransProduct(@PathVariable Long productId, User user){
-        boolean isLike = productService.increaseLikeTransaction(productId, user);
+    public ResponseEntity<?> registerLikesTransProduct(@PathVariable Long productId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        boolean isLike = productService.increaseLikeTransaction(productId, userDetails.getUser());
         return isLike ? ResponseEntity.status(HttpStatus.OK).body(SuccessStatus.PIN_LIKE) : ResponseEntity.status(HttpStatus.OK).body(SuccessStatus.PIN_UNLIKE);
     }
 
     @Operation(summary = "교환상품 좋아요 및 취소", description = "좋아요 되어있을 경우 취소, 안되어있을 경우 좋아요 등록됩니다.")
     @GetMapping("/trade/like/{productId}")
-    public ResponseEntity<?> registerLikesTradeProduct(@PathVariable Long productId, User user){
-        boolean isLike = productService.increaseLikeTrade(productId, user);
+    public ResponseEntity<?> registerLikesTradeProduct(@PathVariable Long productId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        boolean isLike = productService.increaseLikeTrade(productId, userDetails.getUser());
         return isLike ? ResponseEntity.status(HttpStatus.OK).body(SuccessStatus.PIN_LIKE) : ResponseEntity.status(HttpStatus.OK).body(SuccessStatus.PIN_UNLIKE);
     }
+
+
 
 
 }

@@ -32,18 +32,25 @@ public class S3Uploader {
     @Value("${cloud.aws.region.static}")
     private String region;  // S3 리전 값
 
+    private String defaultImageUrl = "default.url";
+
     // 단일 파일 업로드
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile)
-                .orElseThrow(() -> new IOException("Failed to create a file from MultipartFile"));
+        if (multipartFile == null || multipartFile.isEmpty()) {
+            log.warn("파일이 제공되지 않음. 기본 URL 반환");
+            return defaultImageUrl; // 파일이 없으면 기본 이미지 반환
+        }
+
+        File uploadFile = convert(multipartFile);
         return upload(uploadFile, dirName);
     }
+
 
     // 다중 파일 업로드
     public List<String> upload(List<MultipartFile> multipartFiles, String dirName) throws IOException {
         List<String> fileUrls = new ArrayList<>();
         for (MultipartFile file : multipartFiles) {
-            fileUrls.add(upload(file, dirName));
+            fileUrls.add(upload(file, dirName)); // 개별적으로 업로드 수행
         }
         return fileUrls;
     }
@@ -73,14 +80,16 @@ public class S3Uploader {
         }
     }
 
-    private Optional<File> convert(MultipartFile multipartFile) throws IOException {
-        File convertFile = new File(System.getProperty("java.io.tmpdir") + "/" + multipartFile.getOriginalFilename());
-        if (convertFile.createNewFile()) {
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(multipartFile.getBytes());
-            }
-            return Optional.of(convertFile);
+    private File convert(MultipartFile multipartFile) throws IOException {
+        if (multipartFile == null || multipartFile.isEmpty()) {
+            throw new IOException("파일이 제공되지 않았습니다.");
         }
-        return Optional.empty();
+
+        File convertFile = File.createTempFile(UUID.randomUUID().toString(), "_" + multipartFile.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+            fos.write(multipartFile.getBytes());
+        }
+        return convertFile;
     }
+
 }

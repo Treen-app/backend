@@ -35,8 +35,6 @@ public class QTransProduct extends EntityPathBase<TransProduct> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final ListPath<TransPImg, QTransPImg> images = this.<TransPImg, QTransPImg>createList("images", TransPImg.class, QTransPImg.class, PathInits.DIRECT2);
-
     public final NumberPath<Long> likedCount = createNumber("likedCount", Long.class);
 
     public final EnumPath<com.app.treen.products.entity.enumeration.Method> method = createEnum("method", com.app.treen.products.entity.enumeration.Method.class);

@@ -1,5 +1,6 @@
 package com.app.treen.products.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.app.treen.products.entity.*;
 import com.app.treen.products.entity.enumeration.*;
 import com.app.treen.user.entity.User;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL) // ✅ NULL인 필드는 JSON에서 제외
 public class TransProductResponseDto {
 
     private Long id;
@@ -34,7 +36,7 @@ public class TransProductResponseDto {
 
     private Long writerId;
 
-    public TransProductResponseDto(TransProduct transProduct, List<TransRegion> transRegions, User user) {
+    public TransProductResponseDto(TransProduct transProduct, List<TransRegion> transRegions, List<TransPImg> images, User user) {
         this.id = transProduct.getId();
         this.name = transProduct.getName();
         this.usedTerm = transProduct.getUsedTerm();
@@ -48,20 +50,24 @@ public class TransProductResponseDto {
         this.viewCount = transProduct.getViewCount();
         this.likedCount = transProduct.getLikedCount();
 
-        this.imageUrls = transProduct.getImages().stream()
+        // ✅ 이미지 URL 리스트 설정
+        this.imageUrls = images.stream()
                 .map(TransPImg::getImgUrl)
                 .collect(Collectors.toList());
 
-        this.regions = transRegions.stream()
-                .map(transRegion -> transRegion.getRegion().getName())
-                .collect(Collectors.toList());
+        // ✅ 지역 리스트 설정 (null이면 설정 안 함)
+        if (transRegions != null && !transRegions.isEmpty()) {
+            this.regions = transRegions.stream()
+                    .map(transRegion -> transRegion.getRegion().getName())
+                    .collect(Collectors.toList());
+        }
 
-        // 유저 정보 반환
+        // ✅ 유저 정보 설정
         this.userName = user.getUserName();
         this.userImage = user.getProfileImgUrl();
         this.writerId = user.getId();
 
-        // createdDate 포맷팅
+        // ✅ 생성 시간 포맷팅
         this.createdDate = formatRelativeTime(transProduct.getCreatedDate());
     }
 
@@ -69,8 +75,6 @@ public class TransProductResponseDto {
      * 상대적인 시간 표현으로 변환
      * @param createdDate 생성 시간
      * @return 상대적 시간
-     * /
-
      */
     private String formatRelativeTime(LocalDateTime createdDate) {
         Duration duration = Duration.between(createdDate, LocalDateTime.now());
