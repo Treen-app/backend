@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL) // ✅ NULL인 필드는 JSON에서 제외
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransProductResponseDto {
 
     private Long id;
@@ -50,24 +50,20 @@ public class TransProductResponseDto {
         this.viewCount = transProduct.getViewCount();
         this.likedCount = transProduct.getLikedCount();
 
-        // ✅ 이미지 URL 리스트 설정
         this.imageUrls = images.stream()
                 .map(TransPImg::getImgUrl)
                 .collect(Collectors.toList());
 
-        // ✅ 지역 리스트 설정 (null이면 설정 안 함)
         if (transRegions != null && !transRegions.isEmpty()) {
             this.regions = transRegions.stream()
                     .map(transRegion -> transRegion.getRegion().getName())
                     .collect(Collectors.toList());
         }
 
-        // ✅ 유저 정보 설정
         this.userName = user.getUserName();
         this.userImage = user.getProfileImgUrl();
         this.writerId = user.getId();
 
-        // ✅ 생성 시간 포맷팅
         this.createdDate = formatRelativeTime(transProduct.getCreatedDate());
     }
 

@@ -169,7 +169,7 @@ public class ProductService {
 
     // 3. 거래 상품 수정
     @Transactional
-    public void updateTransProduct(Long productId, TransProductUpdateDto dto, List<MultipartFile> files) throws IOException
+    public void updateTransProduct(Long productId, TransProductUpdateDto dto)
     {
         TransProduct existingProduct = transProductRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
@@ -177,16 +177,6 @@ public class ProductService {
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
 
-
-        // S3에 새로운 파일 업로드 및 URL 변환
-        if (files != null && !files.isEmpty()) {
-            List<String> uploadedUrls = s3Uploader.upload(files, "trans-product-images");
-
-            // 기존 이미지 삭제 및 새로운 이미지 저장
-            transPImgRepository.deleteByTransProduct(existingProduct);
-            List<TransPImg> newImages = dto.getImgRequest().toImageEntities(existingProduct,uploadedUrls);
-            transPImgRepository.saveAll(newImages);
-        }
         existingProduct.updateDetails(
                 dto.getName(),
                 dto.getUsedTerm(),
@@ -204,7 +194,7 @@ public class ProductService {
 
     // 4. 교환 상품 수정
     @Transactional
-    public void updateTradeProduct(Long productId, TradeProductUpdateDto dto, List<MultipartFile> files) throws IOException {
+    public void updateTradeProduct(Long productId, TradeProductUpdateDto dto)  {
         // 기존 교환 상품 찾기
         TradeProduct existingProduct = tradeProductRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
@@ -216,14 +206,6 @@ public class ProductService {
         // 희망 카테고리 조회
         List<Category> wishCategories = categoryRepository.findAllById(dto.getWishCategoryRequest().getWishCategoryIds());
 
-        // 이미지 업로드 및 저장
-        if (files != null && !files.isEmpty()) {
-            List<String> uploadedUrls = s3Uploader.upload(files, "trade-product-images");
-            // 기존 이미지 삭제 및 새 이미지 저장
-            tradePImgRepository.deleteByTradeProduct(existingProduct);
-            List<TradePImg> newImages = dto.getImgRequest().toImageEntities(existingProduct,uploadedUrls);
-            tradePImgRepository.saveAll(newImages);
-        }
 
         // 희망 카테고리 업데이트
         List<WishCategory> wishCategoryEntities = dto.getWishCategoryRequest().toWishCategoryEntities(existingProduct, wishCategories);
@@ -239,16 +221,28 @@ public class ProductService {
 
     // 5. 거래 상품 삭제
     @Transactional
-    public void deleteTransProduct(Long productId){
+    public void deleteTransProduct(Long productId) {
         TransProduct existingProduct = transProductRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+                .orElseThrow(() ->  new CustomException(ErrorStatus.PRODUCT_NOT_FOUND));
+        List<String> imageUrls = transPImgRepository.findByTransProduct(existingProduct)
+                .stream()
+                .map(TransPImg::getImgUrl)
+                .collect(Collectors.toList());
+        imageUrls.forEach(s3Uploader::deleteImage); // S3에서 이미지 삭제
+        transPImgRepository.deleteByTransProduct(existingProduct);
         transProductRepository.delete(existingProduct);
     }
+
     // 6. 교환 상품 삭제
     @Transactional
     public void deleteTradeProduct(Long productId) {
         TradeProduct existingProduct = tradeProductRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException(ErrorStatus.PRODUCT_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new CustomException(ErrorStatus.PRODUCT_NOT_FOUND));
+        List<String> imageUrls = tradePImgRepository.findAllByTradeProduct(existingProduct)
+                        .stream()
+                        .map(TradePImg::getImgUrl)
+                        .collect(Collectors.toList());
+        tradeProductRepository.deleteByTradeProduct(existingProduct);
         tradeProductRepository.delete(existingProduct);
     }
 

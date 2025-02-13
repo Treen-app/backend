@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.File;
@@ -70,6 +71,23 @@ public class S3Uploader {
 
         amazonS3.putObject(putObjectRequest, RequestBody.fromFile(Paths.get(uploadFile.getPath())));
         return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + fileName;
+    }
+
+    public void deleteImage(String imageUrl) {
+        if (imageUrl == null || !imageUrl.contains(bucket)) {
+            log.warn("잘못된 이미지 URL: {}", imageUrl);
+            return;
+        }
+
+        // S3에서 삭제할 Key 추출
+        String fileKey = imageUrl.substring(imageUrl.indexOf(bucket) + bucket.length() + 1); // 버킷 경로 이후 문자열 추출
+
+        amazonS3.deleteObject(DeleteObjectRequest.builder()
+                .bucket(bucket)
+                .key(fileKey)
+                .build());
+
+        log.info("이미지 삭제 완료: {}", imageUrl);
     }
 
     private void removeNewFile(File targetFile) {
