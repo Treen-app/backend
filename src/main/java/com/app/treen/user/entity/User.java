@@ -1,13 +1,9 @@
 package com.app.treen.user.entity;
 
-import com.app.treen.products.entity.enumeration.Gender;
-import com.app.treen.products.entity.enumeration.Size;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +51,8 @@ public class User {
     public void changeStatusToActive() {
         this.status = UserStatus.ACTIVE;
     }
+
+    public void changeStatusToSuspend() { this.status = UserStatus.DEACTIVATED; }
 
     public void changeStatusToDeleted() {
         this.status = UserStatus.DELETED;

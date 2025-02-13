@@ -1,8 +1,6 @@
 package com.app.treen.user.entity;
 
 import com.app.treen.mypage.dto.UpdateUserProfileDto;
-import com.app.treen.products.entity.enumeration.Gender;
-import com.app.treen.products.entity.enumeration.Size;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +31,7 @@ public class UserProfile {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // 프로필 업데이트 메서드
     public void updateProfile(UpdateUserProfileDto dto) {
         this.nickname = dto.getNickname();
         this.gender = dto.getGender();
@@ -42,5 +41,4 @@ public class UserProfile {
         this.footSize = dto.getFootSize();
         this.clothingSize = dto.getClothingSize();
     }
-
 }

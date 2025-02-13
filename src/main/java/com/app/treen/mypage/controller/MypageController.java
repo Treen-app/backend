@@ -1,9 +1,6 @@
 package com.app.treen.mypage.controller;
 
-import com.app.treen.mypage.dto.MypageProfileDto;
-import com.app.treen.mypage.dto.TransactionHistoryDto;
-import com.app.treen.mypage.dto.TradeHistoryDto;
-import com.app.treen.mypage.dto.UpdateUserProfileDto;
+import com.app.treen.mypage.dto.*;
 import com.app.treen.mypage.service.MypageService;
 import com.app.treen.user.service.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +30,12 @@ public class MypageController {
                                                   @RequestBody UpdateUserProfileDto updateUserProfileDto) {
         mypageService.updateUserProfile(userDetails.getUser().getId(), updateUserProfileDto);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "내가 받은 후기 조회")
+    @GetMapping("/reviews")
+    public ResponseEntity<List<ReviewDto>> getReceivedReviews(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(mypageService.getReceivedReviews(userDetails.getUser().getId()));
     }
 
     @Operation(summary = "거래 내역 조회")
