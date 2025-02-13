@@ -140,8 +140,11 @@ public enum ErrorStatus implements BaseErrorCode {
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001", "카테고리를 찾을 수 없습니다."),
 
     // sns 로그인 에러
-    INVALID_PROVIDER(HttpStatus.BAD_REQUEST , "OAUTH400" , "로그인 대상이 유효하지 않습니다."),
-    INVALID_OAUTH_TOKEN(HttpStatus.BAD_REQUEST, "OAUTH401","유효하지 않은 토큰입니다. ");
+    INVALID_PROVIDER(HttpStatus.BAD_REQUEST , "OAUTH4001" , "로그인 대상이 유효하지 않습니다."),
+    INVALID_OAUTH_TOKEN(HttpStatus.BAD_REQUEST, "OAUTH4001","유효하지 않은 토큰입니다. "),
+
+    // 스타일
+    STYLE_NOT_FOUND(HttpStatus.NOT_FOUND, "STYLE4004", "스타일을 찾을 수 없습니다." );
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

@@ -13,8 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class TransImgRequestDto {
 
-
-
     public List<TransPImg> toImageEntities(TransProduct transProduct, List<String> imageUrls) {
         List<TransPImg> images = new ArrayList<>();
         for (int i = 0; i <imageUrls.size();i++) {

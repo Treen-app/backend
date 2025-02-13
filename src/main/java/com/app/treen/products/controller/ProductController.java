@@ -58,24 +58,22 @@ public class ProductController {
     }
 
     @Operation(summary = "거래 상품 수정",description = "거래 상품을 수정합니다.")
-    @PutMapping(value = "/transaction/edit/{productId}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(value = "/transaction/edit/{productId}",consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> editTransProduct(
             @PathVariable Long productId,
-            @RequestPart("images") List<MultipartFile> images,
-            @RequestPart("product") TransProductUpdateDto requestDto,
+            @RequestBody TransProductUpdateDto requestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
-        productService.updateTransProduct(productId,requestDto,images);
+        productService.updateTransProduct(productId,requestDto);
         return ResponseEntity.ok(SuccessStatus.PRODUCT_EDIT_SUCCESS);
     }
 
     @Operation(summary = "교환 상품 수정",description = "교환 상품을 수정합니다.")
-    @PutMapping(value = "/trade/edit/{productId}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(value = "/trade/edit/{productId}",consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> editTradeProduct(
             @PathVariable Long productId,
-            @RequestPart("images") List<MultipartFile> images,
-            @RequestPart("product") TradeProductUpdateDto requestDto,
+            @RequestBody TradeProductUpdateDto requestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
-        productService.updateTradeProduct(productId,requestDto,images);
+        productService.updateTradeProduct(productId,requestDto);
 
         return ResponseEntity.ok(SuccessStatus.PRODUCT_EDIT_SUCCESS);
     }
@@ -151,8 +149,6 @@ public class ProductController {
         boolean isLike = productService.increaseLikeTrade(productId, userDetails.getUser());
         return isLike ? ResponseEntity.status(HttpStatus.OK).body(SuccessStatus.PIN_LIKE) : ResponseEntity.status(HttpStatus.OK).body(SuccessStatus.PIN_UNLIKE);
     }
-
-
 
 
 }
