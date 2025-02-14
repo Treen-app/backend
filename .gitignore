@@ -1,9 +1,16 @@
 HELP.md
-#.gradle
-#build/
-#!gradle/wrapper/gradle-wrapper.jar
+.gradle/
+gradle/
+gradlew.bat
+gradlew
+.github/
+build/
+!gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+h2/
+src/main/resources/application.yaml
+src/main/resources/application.yml
 
 ### STS ###
 .apt_generated
@@ -26,6 +33,9 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+### env ###
+.env
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -35,3 +45,4 @@ out/
 
 ### VS Code ###
 .vscode/
+.DS_Store
