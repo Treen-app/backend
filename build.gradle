@@ -62,7 +62,7 @@ dependencies {
 
 	//H2
 	//runtimeOnly 'com.h2database:h2'
-	
+
 	// QueryDSL
 	implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
 	annotationProcessor(

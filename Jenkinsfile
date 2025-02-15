@@ -21,7 +21,7 @@ pipeline{
             steps {
                 withCredentials([file(credentialsId: 'treenProd', variable: 'treenProd')]) {
                     script {
-                        sh 'cp $snapCampusProd ./src/main/resources/application-prod.yml'
+                        sh 'cp $treenProd ./src/main/resources/application-prod.yml'
                     }
                 }
             }
