@@ -1,8 +1,12 @@
 package com.app.treen.mypage.dto;
 
+import com.app.treen.products.entity.enumeration.Gender;
+import com.app.treen.products.entity.enumeration.Size;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -12,10 +16,10 @@ public class UpdateUserProfileDto {
     private String nickname;
 
     @NotNull
-    private String gender;
+    private Gender gender;
 
     @NotNull
-    private String birthDate; // YYYY-MM-DD 형식의 String으로 전달
+    private LocalDate birthDate;
 
     @NotNull
     private int height;
@@ -24,8 +28,6 @@ public class UpdateUserProfileDto {
     private int weight;
 
     @NotNull
-    private int footSize;
+    private Size size;
 
-    @NotNull
-    private String clothingSize;
 }
