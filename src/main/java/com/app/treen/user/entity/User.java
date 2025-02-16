@@ -59,9 +59,9 @@ public class User {
         this.status = UserStatus.ACTIVE;
     }
 
-    public void changeStatusToDeleted() {
-        this.status = UserStatus.DELETED;
-    }
+    public void changeStatusToSuspend() { this.status = UserStatus.DEACTIVATED; }
+
+    public void changeStatusToDeleted() { this.status = UserStatus.DELETED; }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
