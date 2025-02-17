@@ -27,11 +27,9 @@ public class Style extends BaseTimeEntity {
     @Column(name = "style_id")
     private Long id;
 
-    @Builder.Default
     @Column(name = "like_count")
     private Long likeCount = 0L;
 
-    @Builder.Default
     @Column(name = "view_count")
     private Long viewCount = 0L;
 

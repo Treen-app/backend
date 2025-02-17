@@ -28,7 +28,11 @@ public class QStyleImage extends EntityPathBase<StyleImage> {
 
     public final BooleanPath isMain = createBoolean("isMain");
 
+<<<<<<< HEAD
     public final NumberPath<Integer> sortOrder = createNumber("sortOrder", Integer.class);
+=======
+    public final NumberPath<Integer> order = createNumber("order", Integer.class);
+>>>>>>> develop
 
     public final QStyle style;
 
