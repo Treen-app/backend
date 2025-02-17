@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kakao 로그인</title>
+</head>
+<body>
+<!-- Kakao 로그인 버튼 (클릭 시 Kakao 인증 페이지로 이동) -->
+<div id="loginButton" class="text-center">
+    <a th:href="@{https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=188b142dcd4939b3fceb9cbef82edfd7&redirect_uri=http://localhost:8080/login/oauth2/kakao&prompt=none}">
+        <!-- 이미지 파일이 login.html과 같은 경로에 있으므로 상대 경로로 사용 -->
+        <img src="kakao_login_medium_narrow.png" alt="Kakao 로그인">
+    </a>
+</div>
+
+<!-- 결과 출력 영역 -->
+<div id="result"></div>
+
+<script>
+        // URL에서 원하는 파라미터 값을 추출하는 함수
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // URL에서 'code' 파라미터(인가 코드) 추출
+        const code = getParameterByName('code');
+
+        if (code) {
+            // 인가 코드가 있으면 로그인 버튼 숨김
+            document.getElementById('loginButton').style.display = 'none';
+
+            // Kakao 토큰 요청을 위한 파라미터 구성 (authorization code grant 방식)
+            const params = new URLSearchParams();
+            params.append('grant_type', 'authorization_code');
+            // 실제 환경에서는 Thymeleaf 변수를 사용하거나, 하드코딩된 값으로 대체합니다.
+            params.append('client_id', '188b142dcd4939b3fceb9cbef82edfd7');
+            params.append('redirect_uri', 'http://localhost:8080/login/oauth2/kakao');
+            params.append('code', code);
+
+            // Kakao 토큰 엔드포인트에 POST 요청하여 액세스 토큰 발급받기
+            fetch('https://kauth.kakao.com/oauth/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+                },
+                body: params
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Kakao 토큰 요청 실패');
+                }
+                return response.json();
+            })
+            .then(tokenData => {
+                console.log('Kakao 토큰 데이터:', tokenData);
+                // tokenData.access_token: Kakao에서 발급받은 액세스 토큰
+
+                // 백엔드에 전달할 요청 객체 (OauthJoinRequestDto의 accessToken 필드에 Kakao 액세스 토큰을 담음)
+                const requestBody = { accessToken: tokenData.access_token };
+
+                // 백엔드의 소셜 로그인 엔드포인트에 POST 요청 (provider가 kakao인 경우)
+                return fetch('/login/oauth/kakao', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('백엔드 로그인 요청 실패');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('로그인 성공:', data);
+                // 로그인 성공 후 원하는 페이지로 이동 (예: /home)
+                window.location.href = '/home';
+            })
+            .catch(error => {
+                console.error('로그인 에러:', error);
+                document.getElementById('result').innerText = '로그인에 실패했습니다: ' + error.message;
+            });
+        }
+    </script>
+</body>
+</html>
