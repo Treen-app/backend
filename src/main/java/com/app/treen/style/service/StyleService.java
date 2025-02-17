@@ -8,20 +8,24 @@ import com.app.treen.jpa.repository.style.StyleImageRepository;
 import com.app.treen.jpa.repository.style.StyleLikesRepository;
 import com.app.treen.jpa.repository.style.StyleRepository;
 import com.app.treen.jpa.repository.style.StyleScrapRepository;
+import com.app.treen.jpa.repository.user.UserRepository;
 import com.app.treen.style.dto.request.StyleSaveRequestDto;
 import com.app.treen.style.dto.request.StyleUpdateRequestDto;
 import com.app.treen.style.dto.response.StyleListResponseDto;
 import com.app.treen.style.dto.response.StyleResponseDto;
-import com.app.treen.style.entity.Style;
-import com.app.treen.style.entity.StyleImage;
+import com.app.treen.style.entity.*;
 import com.app.treen.user.entity.User;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +37,10 @@ public class StyleService {
     private final StyleLikesRepository styleLikesRepository;
     private final StyleScrapRepository styleScrapRepository;
 
+    private final UserRepository userRepository;
+
     private final S3Uploader s3Uploader;
+    private JPAQueryFactory queryFactory;
 
     // 스타일 등록
     public StyleResponseDto saveStyle(StyleSaveRequestDto requestDto, User user) throws IOException {
@@ -67,26 +74,88 @@ public class StyleService {
 
     // 내가 등록한 스타일 목록 조회
     public List<StyleListResponseDto> viewMyStyle(User user) {
-        List<Style> style = styleRepository.findByUser(user);
-        StyleImage mainImage = styleImageRepository.findByStyleAndIsMainTrue(style);
-        List<StyleListResponseDto> responseDto = style.stream()
-                .map(s -> new StyleListResponseDto(
-                        s,
-                        s.getUser(),
-                        mainImage
-                ))
-                .collect(Collectors.toList());
-        return responseDto;
+        List<Style> styles = styleRepository.findByUser(user);
+        List<StyleListResponseDto> responseDtoList = new ArrayList<>();
+        for (Style style : styles) {
+            StyleImage mainImage = styleImageRepository.findByStyleAndIsMainTrue(style);
+            responseDtoList.add(new StyleListResponseDto(style, style.getUser(), mainImage));
+        }
+        return responseDtoList;
     }
+
 
     // 스타일 검색
 
     // 스타일 목록 최신순 조회 (팔로우한사람 우선)
     // 스타일 목록 좋아요순 조회
-    // 스타일 상세조회
-    // 스타일 좋아요
-    // 스타일 북마크
-    // 내 북마크목록 조회
-    // 스타일 신고
 
+    // 스타일 상세조회
+    public StyleResponseDto findById(Long id) {
+        Style style = styleRepository.findById(id)
+                .orElseThrow(()->new CustomException(ErrorStatus.STYLE_NOT_FOUND));
+        List<StyleImage> styleImages = styleImageRepository.findByStyle(style);
+        User user = style.getUser();
+        return new StyleResponseDto(style,styleImages,user);
+    }
+
+
+    // 스타일 좋아요
+    @Transactional
+    public boolean likeStyle(Long styleId, User user) {
+        Style style = styleRepository.findById(styleId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.STYLE_NOT_FOUND));
+        boolean isLiked = styleLikesRepository.existsByUserAndStyle(user,style);
+        QStyle thisStyle = QStyle.style;
+        if (!isLiked){
+            styleLikesRepository.save(new StyleLikes(style,user));
+            queryFactory.update(thisStyle)
+                    .set(thisStyle.likeCount,thisStyle.likeCount.add(1))
+                    .where(thisStyle.id.eq(styleId))
+                    .execute();
+            return true;
+        }
+        else {
+            // 좋아요 취소
+            StyleLikes like = styleLikesRepository.findByUserAndStyle(user, style);
+            styleLikesRepository.delete(like);
+            queryFactory.update(thisStyle)
+                    .set(thisStyle.likeCount, thisStyle.likeCount.subtract(1))
+                    .where(thisStyle.id.eq(styleId).and(thisStyle.likeCount.gt(0)))
+                    .execute();
+            return false;
+        }
+    }
+
+    // 스타일 북마크, 이미 북마크되었으면 취소
+    @Transactional
+    public boolean scrapStyle(Long styleId, User user) {
+        Style style = styleRepository.findById(styleId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.STYLE_NOT_FOUND));
+
+        boolean isScrapped = styleScrapRepository.existsByUserAndStyle(user, style);
+
+        if (!isScrapped) {
+            styleScrapRepository.save(new StyleScrap(user, style));
+            return true;
+        } else {
+            StyleScrap scrap = styleScrapRepository.findByUserAndStyle(user, style)
+                    .orElseThrow(() -> new CustomException(ErrorStatus.SCRAP_NOT_FOUND));
+            styleScrapRepository.delete(scrap);
+            return false;
+        }
+    }
+
+    // 내 북마크목록 조회
+    public List<StyleListResponseDto> getMyScrapList(User user) {
+        List<StyleScrap> scrapList = styleScrapRepository.findByUser(user);
+        return scrapList.stream()
+                .map(scrap -> new StyleListResponseDto(
+                        scrap.getStyle(),
+                        scrap.getUser(),
+                        styleImageRepository.findByStyleAndIsMainTrue(scrap.getStyle())
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // 스타일 신고
 }

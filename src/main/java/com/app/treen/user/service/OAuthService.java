@@ -255,4 +255,7 @@ public class OAuthService {
         // 6. 사용자 정보와 JWT 토큰을 포함하는 응답 반환
         return new LoginResponseDto(user, jwtTokenResponse);
     }
+
+    // 로그아웃
+
 }

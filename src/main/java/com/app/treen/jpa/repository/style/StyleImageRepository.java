@@ -11,5 +11,5 @@ public interface StyleImageRepository extends JpaRepository<StyleImage,Long> {
 
     void deleteByStyle(Style thisStyle);
 
-    StyleImage findByStyleAndIsMainTrue(List<Style> style);
+    StyleImage findByStyleAndIsMainTrue(Style style);
 }
