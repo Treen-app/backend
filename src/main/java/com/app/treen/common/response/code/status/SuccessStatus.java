@@ -1,5 +1,6 @@
 package com.app.treen.common.response.code.status;
 
+import ch.qos.logback.classic.pattern.ThrowableHandlingConverter;
 import com.app.treen.common.response.code.BaseCode;
 import com.app.treen.common.response.code.ReasonDTO;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,8 @@ public enum SuccessStatus implements BaseCode {
     JOIN_SUCCESS(HttpStatus.OK, "ACCOUNT200", "회원가입에 성공하였습니다."),
     LOGIN_SUCCESS(HttpStatus.OK, "ACCOUNT200", "로그인에 성공하였습니다."),
     PASSWORD_RESET_SUCCESS(HttpStatus.OK, "ACCOUNT200", "비밀번호 재설정에 성공하였습니다."),
+    PASSWORD_CHANGE_SUCCESS(HttpStatus.OK, "ACCOUNT205", "비밀번호 변경에 성공하였습니다."),
+    PROFILE_UPDATE_SUCCESS(HttpStatus.OK, "ACCOUNT205", "프로필 변경에 성공하였습니다."),
     // ~~~ 관련 응답
     PIN_LIKE(HttpStatus.OK, "LIKE200", "좋아요 등록에 성공하였습니다."),
     PIN_UNLIKE(HttpStatus.OK, "LIKE201", "좋아요 취소를 성공하였습니다."),

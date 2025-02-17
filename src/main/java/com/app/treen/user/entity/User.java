@@ -50,6 +50,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private List<RoleType> roles = new ArrayList<>();
 
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private LocalDate createdDate;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdDate = LocalDate.now();
+    }
 
     public void changePassword(String rawPassword) {
         this.password = rawPassword;
@@ -66,6 +73,5 @@ public class User {
     public void encodePassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
     }
-
 }
 

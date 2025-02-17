@@ -39,16 +39,22 @@ public class UserProfile {
     @Column(nullable = true)
     private int weight;
 
+    @Column(name = "img_url", nullable = true)
+    private String imgUrl;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void updateProfile(UpdateUserProfileDto dto) {
+    public void updateProfile(UpdateUserProfileDto dto, String newImgUrl) {
         this.nickname = dto.getNickname();
         this.gender = dto.getGender();
         this.birthDate = dto.getBirthDate();
         this.height = dto.getHeight();
         this.weight = dto.getWeight();
         this.size = dto.getSize();
+        if (newImgUrl != null) {
+            this.imgUrl = newImgUrl;
+        }
     }
 }

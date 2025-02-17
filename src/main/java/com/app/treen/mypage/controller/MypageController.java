@@ -1,5 +1,6 @@
 package com.app.treen.mypage.controller;
 
+import com.app.treen.common.response.code.status.SuccessStatus;
 import com.app.treen.mypage.dto.*;
 import com.app.treen.mypage.service.MypageService;
 import com.app.treen.user.service.CustomUserDetails;
@@ -25,11 +26,21 @@ public class MypageController {
     }
 
     @Operation(summary = "사용자 정보 수정")
-    @PutMapping("/profile/update")
-    public ResponseEntity<Void> updateUserProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                  @RequestBody UpdateUserProfileDto updateUserProfileDto) {
+    @PutMapping(value = "/profile/update")
+    public ResponseEntity<?> updateUserProfile(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @ModelAttribute UpdateUserProfileDto updateUserProfileDto) {
         mypageService.updateUserProfile(userDetails.getUser().getId(), updateUserProfileDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(SuccessStatus.PROFILE_UPDATE_SUCCESS);
+    }
+
+    @Operation(summary = "비밀번호 변경")
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody ChangePasswordDto changePwDto) {
+        mypageService.changePassword(userDetails.getUser().getId(), changePwDto);
+        return ResponseEntity.ok(SuccessStatus.PASSWORD_CHANGE_SUCCESS);
     }
 
     @Operation(summary = "내가 받은 후기 조회")

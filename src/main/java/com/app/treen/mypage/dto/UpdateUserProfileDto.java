@@ -5,6 +5,7 @@ import com.app.treen.products.entity.enumeration.Size;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -30,4 +31,5 @@ public class UpdateUserProfileDto {
     @NotNull
     private Size size;
 
+    private MultipartFile profileImg;
 }
