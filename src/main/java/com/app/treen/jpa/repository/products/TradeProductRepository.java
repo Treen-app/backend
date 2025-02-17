@@ -10,6 +10,4 @@ import java.util.List;
 
 public interface TradeProductRepository extends JpaRepository<TradeProduct,Long> {
     User findUserById(Long id);
-
-    void deleteByTradeProduct(TradeProduct existingProduct);
 }
