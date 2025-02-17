@@ -1,5 +1,6 @@
 package com.app.treen.mypage.dto;
 
+import com.app.treen.products.entity.enumeration.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,6 +14,6 @@ public class TransactionHistoryDto {
     private String grade;
     private String gender;
     private String category;
-    private String size;
+    private Size size;
     private String tradeMethod;
 }

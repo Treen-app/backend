@@ -30,6 +30,8 @@ public class QUserProfile extends EntityPathBase<UserProfile> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath nickname = createString("nickname");
+
     public final EnumPath<com.app.treen.products.entity.enumeration.Size> size = createEnum("size", com.app.treen.products.entity.enumeration.Size.class);
 
     public final QUser user;

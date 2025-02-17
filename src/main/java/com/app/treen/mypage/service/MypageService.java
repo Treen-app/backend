@@ -39,23 +39,10 @@ public class MypageService {
 
         // 기존 프로필 조회, 없으면 새로 생성
         UserProfile profile = userProfileRepository.findByUserId(userId)
-                .orElseGet(() -> {
-                    UserProfile newProfile = UserProfile.builder()
-                            .user(user)
-                            .nickname(updateUserProfileDto.getNickname())
-                            .gender(updateUserProfileDto.getGender()) // 🚀 String 그대로 사용 가능
-                            .birthDate(LocalDate.parse(updateUserProfileDto.getBirthDate())) // 🚀 직접 변환
-                            .height(updateUserProfileDto.getHeight())
-                            .weight(updateUserProfileDto.getWeight())
-                            .footSize(updateUserProfileDto.getFootSize())
-                            .clothingSize(updateUserProfileDto.getClothingSize())
-                            .build();
-                    return userProfileRepository.save(newProfile);
-                });
+                .orElseGet(() -> userProfileRepository.save(UserProfile.builder().user(user).build()));
 
         // 기존 프로필 업데이트
         profile.updateProfile(updateUserProfileDto); // DTO 전달하여 업데이트 수행
-
         userProfileRepository.save(profile);
     }
 

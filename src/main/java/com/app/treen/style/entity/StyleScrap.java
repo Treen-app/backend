@@ -3,6 +3,7 @@ package com.app.treen.style.entity;
 
 import com.app.treen.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,11 +18,18 @@ public class StyleScrap {
     @Column(name = "style_scrap_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "style_id")
     private Style style;
+
+    @Builder
+    public StyleScrap(User user, Style style) {
+        this.user = user;
+        this.style = style;
+    }
+
 }

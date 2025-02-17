@@ -22,7 +22,7 @@ public class StyleImageRequestDto {
             images.add(StyleImage.builder()
                     .style(style)
                     .imageUrl(imageUrls.get(i))
-                    .order(i)
+                    .sortOrder(i)
                     .isMain(i == 0) // 첫 번째 이미지를 대표 이미지로 설정
                     .build());
         }

@@ -242,7 +242,7 @@ public class ProductService {
                         .stream()
                         .map(TradePImg::getImgUrl)
                         .collect(Collectors.toList());
-        tradeProductRepository.deleteByTradeProduct(existingProduct);
+        tradePImgRepository.deleteByTradeProduct(existingProduct);
         tradeProductRepository.delete(existingProduct);
     }
 

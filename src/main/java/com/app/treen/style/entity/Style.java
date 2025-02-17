@@ -3,12 +3,13 @@ package com.app.treen.style.entity;
 import com.app.treen.BaseTimeEntity;
 import com.app.treen.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Table(name = "styles")
 public class Style extends BaseTimeEntity {
@@ -22,19 +23,16 @@ public class Style extends BaseTimeEntity {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "style_id")
     private Long id;
 
-    @Builder.Default
     @Column(name = "like_count")
     private Long likeCount = 0L;
 
-    @Builder.Default
     @Column(name = "view_count")
-    private Long viewCount;
+    private Long viewCount = 0L;
 
-    @Lob
     private String content;
 
     @ManyToOne

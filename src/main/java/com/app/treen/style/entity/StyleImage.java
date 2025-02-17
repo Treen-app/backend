@@ -24,7 +24,7 @@ public class StyleImage {
 
     private boolean isMain;
 
-    private int order;
+    private int sortOrder;
 
     @ManyToOne
     @JoinColumn(name = "style_id")
