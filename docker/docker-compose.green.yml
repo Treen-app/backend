@@ -18,6 +18,8 @@ services:
       - SPRING_REDIS_PORT=6379
     networks:
       - servernetwork
+    depends_on:
+      - redis
 
 networks:
   servernetwork:
